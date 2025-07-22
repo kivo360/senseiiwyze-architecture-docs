@@ -23,8 +23,8 @@ professional_scenes JSONB, -- {office: 0.8, home: 0.2, outdoor: 0.0}
 education_symbols JSONB, -- {diploma: true, books: false, graduation: true}
 
 -- Color Analysis
-color_psychology JSONB,      -- {blue: 0.35, green: 0.25, purple: 0.15, red: 0.10, grey: 0.15}
-    dominant_colors TEXT[],      -- ['blue', 'green', 'purple']
+color_psychology JSONB, -- {blue: 0.35, green: 0.25, purple: 0.15, red: 0.10, grey: 0.15}
+dominant_colors TEXT [], -- ['blue', 'green', 'purple']
 
 -- Text Analysis
 extracted_text TEXT,
@@ -42,6 +42,7 @@ vision_score INTEGER CHECK (
 ),
 
 -- Analysis Metadata
+
 analysis_model_version TEXT,
     processing_time_ms INTEGER,
     confidence_score DECIMAL(3,2),
@@ -58,11 +59,10 @@ CREATE TABLE vision_board_templates (
     category TEXT, -- 'tech-career', 'entrepreneurial', 'academic', 'personal-growth'
 
 -- Template Structure
-suggested_objects JSONB,
-recommended_colors JSONB,
-example_text TEXT,
+suggested_objects JSONB, recommended_colors JSONB, example_text TEXT,
 
 -- Success Metrics
+
 avg_vision_score INTEGER,
     completion_rate DECIMAL(5,2),
     
@@ -111,9 +111,7 @@ abstraction_ability DECIMAL(5, 2), -- Pattern application
 assessment_duration_seconds INTEGER,
 difficulty_level TEXT, -- 'easy', 'medium', 'hard', 'adaptive'
 game_session_id UUID,
-created_at TIMESTAMP
-WITH
-    TIME ZONE DEFAULT NOW(),
+created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
 -- Ensure one score per assessment type per user per day
 CONSTRAINT unique_daily_cognitive_score 
@@ -121,6 +119,7 @@ CONSTRAINT unique_daily_cognitive_score
 );
 
 -- Cognitive Assessment Sessions
+
 
 CREATE TABLE cognitive_assessment_sessions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -132,6 +131,7 @@ CREATE TABLE cognitive_assessment_sessions (
     overall_score DECIMAL(5,2),
 
 -- Session Context
+
 device_type TEXT, -- 'desktop', 'mobile', 'tablet'
     browser_info TEXT,
     network_quality TEXT, -- 'good', 'fair', 'poor'
@@ -185,9 +185,7 @@ learning_style TEXT, -- 'visual', 'auditory', 'kinesthetic', 'mixed'
 assessment_version TEXT,
 completion_time_minutes INTEGER,
 confidence_level DECIMAL(3, 2), -- 0.0 to 1.0
-created_at TIMESTAMP
-WITH
-    TIME ZONE DEFAULT NOW(),
+created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
 -- One assessment per user per month
 CONSTRAINT unique_monthly_personality_assessment 
@@ -197,14 +195,12 @@ CONSTRAINT unique_monthly_personality_assessment
 -- Personality-Based Recommendations
 
 CREATE TABLE personality_recommendations (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    personality_assessment_id UUID REFERENCES personality_assessments(id) ON DELETE CASCADE,
-    
-    recommended_training_paths TEXT[],
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+    personality_assessment_id UUID REFERENCES personality_assessments (id) ON DELETE CASCADE,
+    recommended_training_paths TEXT [],
     learning_style_adaptations JSONB,
     collaboration_preferences JSONB,
-    stress_management_strategies TEXT[],
-    
+    stress_management_strategies TEXT [],
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -220,9 +216,9 @@ CREATE TABLE training_programs (
 
 -- Program Details
 duration_weeks_min INTEGER,
-    duration_weeks_max INTEGER,
-    description TEXT,
-    prerequisites TEXT[],
+duration_weeks_max INTEGER,
+description TEXT,
+prerequisites TEXT [],
 
 -- Success Requirements (Thresholds)
 vision_score_min INTEGER CHECK (
@@ -249,12 +245,13 @@ logic_weight DECIMAL(3, 2) DEFAULT 0.20,
 algorithm_weight DECIMAL(3, 2) DEFAULT 0.25,
 
 -- Program Metadata
-industry_focus TEXT[], -- ['data-analytics', 'cybersecurity', 'networking']
-    difficulty_level TEXT, -- 'beginner', 'intermediate', 'advanced'
-    certification_offered BOOLEAN DEFAULT false,
-    job_placement_rate DECIMAL(5,2),
+industry_focus TEXT [], -- ['data-analytics', 'cybersecurity', 'networking']
+difficulty_level TEXT, -- 'beginner', 'intermediate', 'advanced'
+certification_offered BOOLEAN DEFAULT false,
+job_placement_rate DECIMAL(5, 2),
 
 -- Pricing
+
 base_price DECIMAL(10,2),
     payment_plans JSONB,
     
@@ -304,9 +301,9 @@ motivation_alignment DECIMAL(3, 2),
 time_pressure_modifier DECIMAL(3, 2),
 
 -- Risk Factors
-risk_factors TEXT[],
-    intervention_needed BOOLEAN DEFAULT false,
-    intervention_types TEXT[],
+risk_factors TEXT [],
+intervention_needed BOOLEAN DEFAULT false,
+intervention_types TEXT [],
 
 -- Predicted Outcomes
 predicted_completion_weeks INTEGER,
@@ -316,12 +313,8 @@ predicted_dropout_risk DECIMAL(5, 2),
 -- Model Information
 model_version TEXT,
 feature_vector JSONB, -- 47-dimensional feature vector
-created_at TIMESTAMP
-WITH
-    TIME ZONE DEFAULT NOW(),
-    valid_until TIMESTAMP
-WITH
-    TIME ZONE,
+created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+valid_until TIMESTAMP WITH TIME ZONE,
 
 -- One prediction per user per program per day
 CONSTRAINT unique_daily_prediction 
@@ -348,6 +341,7 @@ commute_time_minutes INTEGER,
 work_schedule_flexibility TEXT, -- 'very_flexible', 'flexible', 'rigid'
 
 -- Calculated Score
+
 overall_stability_score INTEGER CHECK (overall_stability_score >= 0 AND overall_stability_score <= 100),
     
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -360,6 +354,7 @@ overall_stability_score INTEGER CHECK (overall_stability_score >= 0 AND overall_
 
 -- Intervention Types
 
+
 CREATE TABLE intervention_types (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     intervention_name TEXT NOT NULL UNIQUE,
@@ -371,6 +366,7 @@ CREATE TABLE intervention_types (
     expected_improvement_points INTEGER,
 
 -- Target Areas
+
 target_cognitive_areas TEXT[],
     target_personality_traits TEXT[],
     target_life_circumstances TEXT[],
@@ -405,6 +401,7 @@ post_intervention_scores JSONB,
 improvement_achieved DECIMAL(5, 2),
 
 -- Coaching Notes
+
 coach_notes TEXT,
     participant_feedback TEXT,
     
@@ -450,6 +447,7 @@ job_placement_date DATE,
 starting_salary DECIMAL(10, 2),
 
 -- Prediction Accuracy
+
 original_prediction_id UUID REFERENCES training_readiness_predictions(id),
     prediction_accuracy DECIMAL(5,2),
     
@@ -479,9 +477,7 @@ cohort_identifier TEXT, -- 'all_users', 'new_enrollments', 'specific_program'
 -- Metadata
 calculation_method TEXT,
 data_source TEXT,
-created_at TIMESTAMP
-WITH
-    TIME ZONE DEFAULT NOW(),
+created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
 -- One metric per name per date per cohort
 CONSTRAINT unique_daily_kpi 
@@ -573,35 +569,133 @@ CREATE TRIGGER update_program_enrollments_updated_at
 -- =====================================================
 
 -- Insert sample training programs
-INSERT INTO training_programs (
-    program_name, program_code, duration_weeks_min, duration_weeks_max,
-    vision_score_min, grit_score_min, logic_score_min, algorithm_score_min,
-    industry_focus, difficulty_level, base_price
-) VALUES 
-    ('Cisco Data Analytics', 'CISCO_DA', 32, 40, 70, 65, 80, 70, 
-     ARRAY['data-analytics'], 'intermediate', 8999.00),
-    ('Cisco Cybersecurity Operations', 'CISCO_CYBER', 36, 44, 65, 75, 70, 80,
-     ARRAY['cybersecurity'], 'intermediate', 9999.00),
-    ('Cisco Network Engineering', 'CISCO_NET', 40, 48, 70, 75, 75, 85,
-     ARRAY['networking'], 'advanced', 11999.00),
-    ('Cisco IoT Tech Support', 'CISCO_IOT', 28, 36, 60, 70, 65, 70,
-     ARRAY['iot', 'support'], 'beginner', 6999.00),
-    ('IBM AI & Machine Learning', 'IBM_AI_ML', 44, 48, 80, 80, 85, 90,
-     ARRAY['ai', 'machine-learning'], 'advanced', 14999.00);
+INSERT INTO
+    training_programs (
+        program_name,
+        program_code,
+        duration_weeks_min,
+        duration_weeks_max,
+        vision_score_min,
+        grit_score_min,
+        logic_score_min,
+        algorithm_score_min,
+        industry_focus,
+        difficulty_level,
+        base_price
+    )
+VALUES (
+        'Cisco Data Analytics',
+        'CISCO_DA',
+        32,
+        40,
+        70,
+        65,
+        80,
+        70,
+        ARRAY['data-analytics'],
+        'intermediate',
+        8999.00
+    ),
+    (
+        'Cisco Cybersecurity Operations',
+        'CISCO_CYBER',
+        36,
+        44,
+        65,
+        75,
+        70,
+        80,
+        ARRAY['cybersecurity'],
+        'intermediate',
+        9999.00
+    ),
+    (
+        'Cisco Network Engineering',
+        'CISCO_NET',
+        40,
+        48,
+        70,
+        75,
+        75,
+        85,
+        ARRAY['networking'],
+        'advanced',
+        11999.00
+    ),
+    (
+        'Cisco IoT Tech Support',
+        'CISCO_IOT',
+        28,
+        36,
+        60,
+        70,
+        65,
+        70,
+        ARRAY['iot', 'support'],
+        'beginner',
+        6999.00
+    ),
+    (
+        'IBM AI & Machine Learning',
+        'IBM_AI_ML',
+        44,
+        48,
+        80,
+        80,
+        85,
+        90,
+        ARRAY['ai', 'machine-learning'],
+        'advanced',
+        14999.00
+    );
 
 -- Insert sample intervention types
-INSERT INTO intervention_types (
-    intervention_name, category, description, duration_weeks,
-    cost_per_participant, expected_improvement_points, target_cognitive_areas
-) VALUES 
-    ('Logic Bootcamp', 'cognitive', 'Intensive logic and problem-solving training', 2,
-     500.00, 12, ARRAY['logic', 'algorithm']),
-    ('Goal Setting Workshop', 'motivational', 'Vision board optimization and goal clarity', 1,
-     200.00, 8, ARRAY['vision']),
-    ('Study Skills Enhancement', 'cognitive', 'Time management and learning strategies', 3,
-     750.00, 15, ARRAY['grit', 'logic']),
-    ('Stress Management Program', 'motivational', 'Coping strategies for high-pressure learning', 2,
-     400.00, 10, ARRAY['neuroticism']);
+INSERT INTO
+    intervention_types (
+        intervention_name,
+        category,
+        description,
+        duration_weeks,
+        cost_per_participant,
+        expected_improvement_points,
+        target_cognitive_areas
+    )
+VALUES (
+        'Logic Bootcamp',
+        'cognitive',
+        'Intensive logic and problem-solving training',
+        2,
+        500.00,
+        12,
+        ARRAY['logic', 'algorithm']
+    ),
+    (
+        'Goal Setting Workshop',
+        'motivational',
+        'Vision board optimization and goal clarity',
+        1,
+        200.00,
+        8,
+        ARRAY['vision']
+    ),
+    (
+        'Study Skills Enhancement',
+        'cognitive',
+        'Time management and learning strategies',
+        3,
+        750.00,
+        15,
+        ARRAY['grit', 'logic']
+    ),
+    (
+        'Stress Management Program',
+        'motivational',
+        'Coping strategies for high-pressure learning',
+        2,
+        400.00,
+        10,
+        ARRAY['neuroticism']
+    );
 
 -- =====================================================
 -- 12. VIEWS FOR ANALYTICS
@@ -703,26 +797,41 @@ FROM
 -- Program Success Analytics View
 
 CREATE VIEW program_success_analytics AS
-SELECT 
+SELECT
     tp.program_name,
     tp.program_code,
     COUNT(pe.id) as total_enrollments,
-    COUNT(CASE WHEN pe.enrollment_status = 'completed' THEN 1 END) as completions,
-    COUNT(CASE WHEN pe.enrollment_status = 'dropped_out' THEN 1 END) as dropouts,
+    COUNT(
+        CASE
+            WHEN pe.enrollment_status = 'completed' THEN 1
+        END
+    ) as completions,
+    COUNT(
+        CASE
+            WHEN pe.enrollment_status = 'dropped_out' THEN 1
+        END
+    ) as dropouts,
     ROUND(
-        COUNT(CASE WHEN pe.enrollment_status = 'completed' THEN 1 END)::DECIMAL / 
-        COUNT(pe.id) * 100, 2
+        COUNT(
+            CASE
+                WHEN pe.enrollment_status = 'completed' THEN 1
+            END
+        )::DECIMAL / COUNT(pe.id) * 100,
+        2
     ) as completion_rate,
     AVG(pe.completion_percentage) as avg_completion_percentage,
     AVG(pe.final_grade) as avg_final_grade,
     AVG(pe.starting_salary) as avg_starting_salary,
     AVG(trp.readiness_score) as avg_readiness_score,
     AVG(trp.prediction_accuracy) as avg_prediction_accuracy
-    
-FROM training_programs tp
-LEFT JOIN program_enrollments pe ON tp.id = pe.training_program_id
-LEFT JOIN training_readiness_predictions trp ON pe.original_prediction_id = trp.id
-GROUP BY tp.id, tp.program_name, tp.program_code;
+FROM
+    training_programs tp
+    LEFT JOIN program_enrollments pe ON tp.id = pe.training_program_id
+    LEFT JOIN training_readiness_predictions trp ON pe.original_prediction_id = trp.id
+GROUP BY
+    tp.id,
+    tp.program_name,
+    tp.program_code;
 
 -- =====================================================
 -- END OF SCHEMA
