@@ -1,0 +1,923 @@
+# SenseiiWyze - Tech-Skill Coaching
+
+This is a **Task Master-AI-compatible PRD** with block-style sections for MCP parsing into tasks. Migration notes are written for a move from Create-React-App to **Next.js (App Router)** and the use of **shadcn/ui** components.
+
+* * *
+
+<context> # Overview Tech-Skill Coach is a web platform that predicts a learner’s probability of completing Cisco NetAcad or IBM SkillsBuild training by fusing their \*vision-board imagery\*, \*Senseii Games telemetry\*, and \*personality/grit surveys\*. The product serves L&D managers, community-college deans, and non-profit boot-camp directors who currently lose funding when completion rates slump. It replaces lagging LMS metrics with real-time “Readiness Scores” and actionable coach nudges. :contentReference\[oaicite:0\]{index=0}
+
+Core Features
+=============
+
+| Feature | What it does | Why it matters | How it works (high-level) |
+| --- | --- | --- | --- |
+| Vision-Board Editor | Drag-and-drop canvas; auto-saves layers | Lets learners externalise goals visually (higher engagement) | Stores image URLs → S3; records z-index & bbox % |
+| CLIP Goal Detection | Generates 1024-d embeddings & theme labels | Quantifies goal–skill alignment | Serverless function calls OpenAI CLIP; cosine sim vs track vectors |
+| Senseii Games Ingest | Streams accuracy & retry telemetry | Gives cognitive-skill signal before coursework | Webhook pipes JSON → Kafka → DB |
+| Composite Readiness Score | 0-100 probability per track | Core KPI for orgs | Ensemble (LogReg + LGBM) runs nightly |
+| SHAP Explain-chips | Shows top ± drivers (“Rocket imagery +6 pp”) | Builds trust; actionable coach tips | Python SHAP → JSON → UI badges |
+| Cohort Admin Dashboard | Tiles + at-risk spotlight | Enables bulk interventions | React + Next.js SSR |
+| Bulk Messaging Center | Segment & send nudges; open/click stats | Automates retention campaigns | Uses Postmark API; dashboards with Recharts |
+| Intervention Kanban | Planned → Done lanes | Tracks coach tasks | Drag-drop with Dnd-Kit & Zustand |
+| Exportable Reports | PDF / CSV / PowerBI | Needed for grants & exec buy-in | Next.js API route renders via Puppeteer |
+| Privacy Retention | Deletes raw images after 30 d; keeps embeddings | Unblocks Legal & IT | S3 lifecycle + cron cleaner [CVF Open Access](https://openaccess.thecvf.com/content/ICCV2023/papers/Pittaluga_LDP-Feat_Image_Features_with_Local_Differential_Privacy_ICCV_2023_paper.pdf?utm_source=chatgpt.com) |
+
+User Experience
+===============
+
+**Personas**:  
+_Dana (L&D manager)_, _Miguel (Dean)_, _Priya (Non-profit director)_.  
+**Key flows**:
+
+1.  **Learner** uploads vision-board → sees personal dashboard → follows roadmap.
+2.  **Admin** logs in → Org Dashboard → clicks at-risk tile → Learner Modal → adds intervention.  
+    **UI/UX considerations**: shadcn/ui primitives; WCAG-AA contrast; Tailwind design-tokens declared in preset. [ui.shadcn.com](https://ui.shadcn.com/docs/installation/next?utm_source=chatgpt.com)[LogRocket Blog](https://blog.logrocket.com/product-management/product-roadmap-template-examples/?utm_source=chatgpt.com)
+    </context><PRD> # Technical Architecture | Layer | Component | Stack / Integration | |-------|-----------|---------------------| | Front-end | Next.js (14 App Router), shadcn/ui, Tailwind v3 | SSR + RSC for perf & SEO :contentReference\[oaicite:3\]{index=3} | | API | Next.js Route Handlers (\`/api\`) | REST & webhook endpoints; JWT auth | | Data Store | PostgreSQL (for main), Redis (cache), Pinecone (vector) | Stores learners, embeddings, SHAP JSON | | ML Service | Python FastAPI micro-service | Hosts CLIP inference & LightGBM | | Message Bus | Kafka (Confluent Cloud) | Streams games telemetry | | Storage | S3 (vision-board imgs) + lifecycle rules | 30-day purge policy :contentReference\[oaicite:4\]{index=4} | | Infra | Vercel (edge) + AWS EKS (ML) | Terraform IaC; GitHub Actions CI/CD | | 3rd-Party APIs | Postmark, Slack bot, PowerBI export | Rate-limited per Zuplo best practice :contentReference\[oaicite:5\]{index=5} |
+
+Development Roadmap
+===================
+
+| Phase | Scope (no timelines) |
+| --- | --- |
+| **MVP** | Next.js shell; Auth; Vision-Board Editor; CLIP service; Games ingest; Readiness Score; Learner Dashboard; Org Dashboard list view |
+| **Pilot Enhancements** | SHAP chips; Bulk Nudge Center; Export PDF; Privacy retention; API webhooks |
+| **Scale** | Kanban Planner; Mentor-match; Multilingual; Integration Marketplace; Offline PWA |
+| **Growth** | AI Interview Bot; Scenario Labs; VR; Blockchain badges |
+
+Logical Dependency Chain
+========================
+
+1.  **Foundation**: Auth → DB schema → Next.js SSR shell.
+2.  **Signal ingestion**: Games webhook → Vision-Board upload → CLIP service.
+3.  **Scoring engine**: Feature ETL → ML inference → API `/scores`.
+4.  **Learner UI** (visible ASAP).
+5.  **Admin dashboard** → Bulk Nudge → Kanban.
+6.  **Exports & API** for enterprise.
+
+Risks and Mitigations
+=====================
+
+| Risk | Mitigation |
+| --- | --- |
+| Model bias & accuracy | Monthly SHAP audit; isotonic calibration [pmprompt.com](https://pmprompt.com/blog/prd-examples?utm_source=chatgpt.com) |
+| Next.js migration complexity | Follow official CRA-to-Next guide; feature flag rollout [Next.js](https://nextjs.org/docs/app/guides/migrating/from-create-react-app?utm_source=chatgpt.com) |
+| Data-privacy on images | S3 30-day purge + differential privacy research [CVF Open Access](https://openaccess.thecvf.com/content/ICCV2023/papers/Pittaluga_LDP-Feat_Image_Features_with_Local_Differential_Privacy_ICCV_2023_paper.pdf?utm_source=chatgpt.com) |
+| API abuse | Implement token-bucket rate limiting per Zuplo 2025 guide [Zuplo](https://zuplo.com/blog/2025/01/06/10-best-practices-for-api-rate-limiting-in-2025?utm_source=chatgpt.com) |
+| Scope creep | MVP gate; roadmap phases (Product School template) [Product School](https://productschool.com/blog/product-strategy/product-roadmap-examples?utm_source=chatgpt.com) |
+
+Appendix
+========
+
+*   PRD pattern sources & templates [tipsntutorials.com](https://www.tipsntutorials.com/what-is-a-prd-file-in-task-master-complete-guide-examples/?utm_source=chatgpt.com)[pmprompt.com](https://pmprompt.com/blog/prd-examples?utm_source=chatgpt.com)
+*   State-machine table guidelines [GitHub](https://github.com/BruceEckel/ThinkingInPython/blob/master/Markdown/16_State_Machines.md?utm_source=chatgpt.com)
+*   Software-risk lists [agentestudio.com](https://agentestudio.com/blog/software-development-project-risks?utm_source=chatgpt.com)[ProjectPractical.com](https://www.projectpractical.com/20-project-risk-examples-and-their-mitigation-strategies/?utm_source=chatgpt.com)
+*   Migration SEO/perf data for Next.js [beyondit.blog](https://beyondit.blog/blogs/CRA-to-Next-js-Unlock-5x-Performance-Perfect-SEO?utm_source=chatgpt.com)
+*   MVP roadmap best practices [upsilonit.com](https://www.upsilonit.com/blog/how-to-make-an-mvp-roadmap?utm_source=chatgpt.com)
+    </PRD>
+
+## Prompt:
+That's awesome. Now to strategically include code blocks. Do not add code blocks. When you add code blocks, it does break to the output that you created. 
+
+The technical architecture is too complex. We are going to use modern systems, so that's next.js 15, Tailwind v4, and then our data store. We are going to use PostgreSQL (i.e., Supabase), Redis (Upstash), and likely QDrant (I don't know how to pronounce that very well). ML service. We're going to definitely use a fast API, but it's going to be behind a few other things. We're going to have maybe some serverless involved to save money. Infrastructure Slack bot limit third-party API if we're trying to take money, I think we should use [autum billing](https://www.better-auth.com/docs/plugins/autumn). Autumn billing basically reduces all of the setup that we would have to do for Stripe. Meaning if we can do that, we would save ourselves a lot of time and energy.  
+
+No message bus right now, no need. I think we could end up using something like workflow technology like Inngest or the one that Upstash most recently came out with.
+
+## Response:
+Thought for 40 seconds
+
+The user wants me to revise the technical architecture section by simplifying it. They mention a specific stack: Next.js 15, Tailwind v4, Supabase Postgres, Upstash Redis, Qdrant vector DB, and a FastAPI ML service in a serverless setup. I'll avoid using code blocks in the revision and focus on high-quality citations. It looks like I need to find information on the components, including their versions, features, and any updates. I'll search the web for relevant details and references, aiming for a clear and accurate update.
+
+The user asked me to remove the message bus and serverless elements, and now wants to avoid code blocks, as they disrupt the output. I need to summarize sections with markdown headers (but no title) while including at least 10 citations. I'll need to gather up-to-date information on Next.js 15, specifically regarding its upcoming features and a possible release in June 2025 (maybe a beta). I'll search for this info to provide accurate and thorough updates.
+
+Searched the web
+
+Next.js 15 release features App Router improvements 2025
+
+Tailwind CSS v4 release date and features 2025
+
+7 more
+
+[
+
+![](https://www.google.com/s2/favicons?domain=https://nextjs.org&sz=32)
+
+nextjs.org
+
+](https://nextjs.org/blog/next-15)
+
+[
+
+![](https://www.google.com/s2/favicons?domain=https://tailwindcss.com&sz=32)
+
+tailwindcss.com
+
+](https://tailwindcss.com/blog/tailwindcss-v4)
+
+[
+
+![](https://www.google.com/s2/favicons?domain=https://supabase.com&sz=32)
+
+supabase.com
+
+](https://supabase.com/features/postgres-database)
+
+![](https://www.google.com/s2/favicons?domain=https://upstash.com&sz=32)
+
+![](https://www.google.com/s2/favicons?domain=https://qdrant.tech&sz=32)
+
+![](https://www.google.com/s2/favicons?domain=https://towardsserverless.com&sz=32)
+
+9 more
+
+The user wants me to simplify the Technical Architecture section while avoiding the use of code blocks. I'll provide a straightforward explanation of the components, including Next.js 15, Tailwind v4, Supabase Postgres, Upstash Redis, and Qdrant vector DB, plus workflows using Inngest or Upstash qStash. I'll also outline a simplified Development Roadmap and Logical Dependency Chain. It sounds like I need to format the sections with markdown headers, include a summary paragraph, and justify structured prompts with citations. I'll cover this in the updated PRD.
+
+Done
+
+Modernising the **Technical Architecture** for your Tech-Skill-Coach app becomes far simpler once we narrow the stack to Next.js 15, Tailwind v4, Supabase (PostgreSQL), Upstash (Redis + workflow), Qdrant for vector search, a FastAPI micro-service on serverless functions, and Autumn Billing for payments. Below is a revised PRD section plus adjusted roadmap and dependency notes, expressed without code blocks so Task Master-AI can ingest it cleanly.
+
+* * *
+
+Updated Technical Architecture (“just the essentials”)
+------------------------------------------------------
+
+| Layer | Implementation choice | Why this fits the brief |
+| --- | --- | --- |
+| **Front-end** | Next.js 15 App Router with shadcn/ui and Tailwind v4 utilities | Next 15 ships React 19 support, stable Turbopack and smoother caching, giving us future-proof SSR/ISR without CRA’s legacy bundles [Next.js](https://nextjs.org/blog/next-15?utm_source=chatgpt.com)[DEV Community](https://dev.to/heyabdullahbruh/whats-new-in-nextjs-15-a-smooth-developer-experience-ahead-bep?utm_source=chatgpt.com). Tailwind v4’s faster build and tokenised config aligns with our brand preset [Tailwind CSS](https://tailwindcss.com/blog/tailwindcss-v4?utm_source=chatgpt.com)[fireup.pro](https://fireup.pro/news/tailwind-css-v4-0-released-lightning-fast-builds-advanced-features-and-simplified-setup?utm_source=chatgpt.com). |
+| **Datastore** | Supabase-hosted Postgres for relational data | Managed Postgres plus row-level security and instant REST/GraphQL endpoints cuts infra toil [Supabase](https://supabase.com/features/postgres-database?utm_source=chatgpt.com)[w3resource](https://www.w3resource.com/PostgreSQL/snippets/postgresql-supabase.php?utm_source=chatgpt.com). |
+| **Cache / workflow** | Upstash Redis for session cache; Upstash QStash (or Inngest) for background tasks | Serverless pay-per-command Redis removes the need for self-hosted queue brokers [Upstash: Serverless Data Platform](https://upstash.com/pricing/redis?utm_source=chatgpt.com)[DeepWiki](https://deepwiki.com/upstash/docs/2.2-redis-pricing-and-plans?utm_source=chatgpt.com). Inngest’s event-driven functions mesh cleanly with Next.js API routes [inngest.com](https://www.inngest.com/docs/guides/background-jobs?utm_source=chatgpt.com). |
+| **Vector DB** | Qdrant Cloud for embedding search | Rust-based, high-speed ANN queries suit CLIP & SHAP embedding look-ups while offering SaaS convenience [Qdrant](https://qdrant.tech/documentation/cloud-api/?utm_source=chatgpt.com). |
+| **ML Service** | FastAPI micro-service exposed via serverless functions (AWS Lambda or Vercel Functions) | Keeps Python ML isolated yet inexpensive; many guides show FastAPI + Lambda patterns [https://towardsserverless.com](https://towardsserverless.com/articles/fastapi-aws-lambda?utm_source=chatgpt.com). |
+| **Payments** | Autumn Billing as a lightweight Stripe layer | Cuts webhook plumbing while still allowing subscriptions and usage-based models [GitHub](https://github.com/useautumn/autumn?utm_source=chatgpt.com). |
+| **Observability** | Vercel analytics + Supabase logs; optional Upstash Insights | Minimal stacks; all SaaS dashboards. |
+
+**What we removed**  
+• Kafka / message bus → replaced by Upstash QStash/Inngest triggers.  
+• Kubernetes cluster → unnecessary for serverless FastAPI and Vercel.  
+• Complex multi-cloud setup → single-region deploy until scale demands more.
+
+* * *
+
+Development Roadmap (scope-only)
+--------------------------------
+
+### MVP foundations
+
+1 · Next.js 15 shell, shadcn/layout, Tailwind v4 tokens.  
+2 · Supabase schema & RLS; Upstash Redis session cache.  
+3 · Vision Board upload (S3 via Supabase Storage).  
+4 · FastAPI endpoint for CLIP embedding + Qdrant insert.  
+5 · Readiness score endpoint and learner dashboard.
+
+### Pilot enhancements
+
+6 · SHAP “Why” chips + cohort admin dashboard.  
+7 · Bulk Messaging Centre using Upstash QStash workflows.  
+8 · Autumn Billing integration for seat licences.
+
+### Scale layer
+
+9 · Intervention Kanban + mentor-match function on Inngest.  
+10 · Multilingual UI, exportable PDF reports, PowerBI connector.
+
+* * *
+
+Logical Dependency Chain (lean)
+-------------------------------
+
+1.  Baseline auth and Supabase schema
+2.  File uploads → embeddings → Qdrant
+3.  Score service → learner dashboard (visible value fast)
+4.  Admin views → messaging → billing
+5.  Optional advanced workflows (Kanban, multilingual)
+
+This order keeps each feature atomic yet expandable, ensures the first end-to-end flow (upload → score → dashboard) ships before heavier admin tooling, and leverages serverless pay-as-you-go resources to control early-stage spend.
+
+* * *
+
+Key Risks & Mitigations (re-scoped)
+-----------------------------------
+
+| Risk | Mitigation |
+| --- | --- |
+| Tailwind v4 purge bugs | Use built-in `@tailwindcss/upgrade` codemod; lock to stable ✧ [Tailwind CSS](https://tailwindcss.com/blog/tailwindcss-v4?utm_source=chatgpt.com) |
+| Supabase rate limits during image uploads | Enable Supabase Storage multipart; auto-resize client-side. |
+| Cold-start latency for FastAPI Lambda | Deploy to regional edge; cache model weights in `/tmp`. |
+| Workflow over-complexity | Start with Upstash QStash webhooks; layer Inngest only when multi-step workflows emerge. |
+| Billing edge cases | Lean on Autumn’s built-in retries & proration, reducing custom Stripe logic [GitHub](https://github.com/useautumn/autumn?utm_source=chatgpt.com) |
+
+* * *
+
+### Why this pared-down architecture is “just right”
+
+*   **Modern defaults:** Next 15 & Tailwind v4 bring top-shelf DX without eject scripts.
+*   **SaaS everywhere:** Supabase, Upstash, Qdrant, Autumn—managed services slash ops.
+*   **Serverless ML:** FastAPI-on-Lambda keeps Python models cheap and isolated.
+*   **Workflow optionality:** Inngest/QStash scale later but aren’t mandatory day-one.
+
+This streamlined spec keeps Task Master-AI’s task tree manageable while ensuring the first customer-visible loop (goal upload → readiness insight) arrives quickly and in a stack your devs already know.
+
+## Prompt:
+Can you give me a high-level overview of this project and then add the PRD (the one you just made) without any code blocks underneath it? 
+
+Figure out how to model page flows, as well as the actions that users will take. So basically it's like a combination of screen flows and user journeys as you're outputting it.
+
+## Response:
+Thought for 39 seconds
+
+User needs a high-level project overview, followed by the PRD content without code blocks. We’ve already developed the PRD, but it needs to be pasted as plain text. I'll also model page flows and user actions by combining both screen flows and user journeys, and present them in markdown. For supporting references, I'll conduct searches on Next.js 15, Tailwind v4, Supabase, and others to gather at least 10 citations, ensuring they're from unique domains. We have the technical architecture, roadmap, and risks prepared. Let's start gathering the necessary resources.
+
+I’m focusing on several key technologies to support the project: Tailwind CSS v4, Supabase with row-level security and storage, Upstash Redis and QStash, Qdrant's vector database features, Autumn billing with the Stripe plugin, prompt engineering for reducing hallucinations, Inngest integration with Next.js, FastAPI on AWS Lambda, and Shadcn/ui components. I’ll search for references on each one to gather comprehensive sources. Let’s start running those searches to get the necessary information.
+
+Searched the web
+
+Next.js 15 new features App Router React 19 integration
+
+Tailwind CSS v4 release faster build design tokens
+
+9 more
+
+[
+
+![](https://www.google.com/s2/favicons?domain=https://dev.to&sz=32)
+
+dev.to
+
+](https://dev.to/robertobutti/how-to-build-a-dynamic-website-with-nextjs-15-app-router-react-19-storyblok-and-bun--2972)
+
+[
+
+![](https://www.google.com/s2/favicons?domain=https://tailwindcss.com&sz=32)
+
+tailwindcss.com
+
+](https://tailwindcss.com/blog/tailwindcss-v4)
+
+[
+
+![](https://www.google.com/s2/favicons?domain=https://supabase.com&sz=32)
+
+supabase.com
+
+](https://supabase.com/docs/guides/database/postgres/row-level-security)
+
+![](https://www.google.com/s2/favicons?domain=https://upstash.com&sz=32)
+
+![](https://www.google.com/s2/favicons?domain=https://qdrant.tech&sz=32)
+
+![](https://www.google.com/s2/favicons?domain=https://www.better-auth.com&sz=32)
+
+6 more
+
+Done
+
+Modern Tech-Skill Coach is a **Next.js 15 + Tailwind v4** SaaS that turns a learner’s vision-board images, Senseii Games telemetry, and personality scores into a 0-100 “Readiness Score” and SHAP-driven coaching actions. By leaning on **managed services**—Supabase Postgres for relational data, Upstash Redis/QStash for caching and serverless workflows, Qdrant Cloud for vector search, a FastAPI model on AWS-Lambda/Vercel Functions, and Autumn Billing for payments—the stack stays light, pay-as-you-go, and ops-free. Next.js 15’s App Router and React 19 support give us streaming UI and SEO without Create-React-App’s bundle debt. [DEV Community](https://dev.to/robertobutti/how-to-build-a-dynamic-website-with-nextjs-15-app-router-react-19-storyblok-and-bun--2972?utm_source=chatgpt.com)[Chris.lu](https://chris.lu/web_development/posts/road-to-react-19-next-js-15?utm_source=chatgpt.com) Tailwind v4 exposes design tokens as CSS variables for brand-perfect shadcn/ui components. [Tailwind CSS](https://tailwindcss.com/blog/tailwindcss-v4?utm_source=chatgpt.com)[Tailwind CSS](https://v3.tailwindcss.com/docs/v4-beta?utm_source=chatgpt.com) Supabase’s row-level security and storage make browser-direct uploads safe. [Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security?utm_source=chatgpt.com) Upstash’s per-request Redis pricing plus Workflow engine replaces Kafka queues. [Upstash: Serverless Data Platform](https://upstash.com/pricing/redis?utm_source=chatgpt.com)[Upstash: Serverless Data Platform](https://upstash.com/docs/workflow/getstarted?utm_source=chatgpt.com) Qdrant’s Rust ANN search gives millisecond embedding queries. [Qdrant](https://qdrant.tech/documentation/cloud-intro/?utm_source=chatgpt.com) Autumn Billing wraps Stripe so subscriptions launch in hours, not weeks. [Better Auth](https://www.better-auth.com/docs/plugins/autumn?utm_source=chatgpt.com) Structured, block-style prompts reduce AI hallucination and keep shadcn outputs clean. [God of Prompt](https://www.godofprompt.ai/blog/9-prompt-engineering-methods-to-reduce-hallucinations-proven-tips?utm_source=chatgpt.com)
+
+* * *
+
+Screen-Flow & User-Journey Map
+------------------------------
+
+| Step | Learner Path | Key Front-End Screen | Admin Path | Key Front-End Screen |
+| --- | --- | --- | --- | --- |
+| 1 | Sign-up → upload collage | **Vision-Board Editor** (drag-drop canvas) | Org login | **Org Dashboard** (tiles: Active, At-Risk) |
+| 2 | Background CLIP + Qdrant embed | (serverless FastAPI) | Click “At-Risk” tile | **User Table** auto-filtered |
+| 3 | Learner sees **Readiness Dashboard**: Vision %, Grit %, Radar |  | Select learner row | **Learner Modal** (SHAP chips + notes) |
+| 4 | Learner follows **Roadmap Planner**; streaks & nudges |  | Bulk-select rows → **Intervention Kanban** |  |
+| 5 | Completion stats update Org tiles nightly via Inngest/Upstash |  | Click “Export PDF” → **Export Modal** (PDF/CSV) |  |
+
+These flows keep the _first visible payoff_ (upload → score) under two steps for learners, while admins jump from cohort view to granular coaching in one click.
+
+* * *
+
+<PRD>
+
+Technical Architecture
+======================
+
+Front-end: Next.js 15 (App Router), Tailwind v4, shadcn/ui  
+Datastore: Supabase Postgres (RLS), Upstash Redis (session + cache), Upstash QStash or Inngest for workflows  
+Vector DB: Qdrant Cloud  
+ML: FastAPI micro-service on AWS Lambda / Vercel Edge Functions  
+Payments: Autumn Billing over Stripe  
+Observability: Vercel analytics, Supabase logs, Upstash Insights
+
+Development Roadmap
+===================
+
+**MVP** – Auth, Supabase schema, Vision-Board upload, CLIP embedding + Qdrant insert, Readiness score API, Learner Dashboard  
+**Pilot Enhancements** – SHAP chips, Org Dashboard tiles, Bulk Messaging Center (QStash), Export PDF/CSV, Autumn Billing subscriptions  
+**Scale** – Intervention Kanban, Mentor-match, Multilingual UI, Integration Marketplace, Offline PWA  
+**Growth** – AI Interview Bot, Scenario Labs, VR labs, Blockchain badge wallet
+
+Logical Dependency Chain
+========================
+
+1 Auth & DB → 2 File upload & embeddings → 3 Score service & learner UI → 4 Admin UI & messaging → 5 Billing → 6 Advanced workflows
+
+Risks and Mitigations
+=====================
+
+Model bias – monthly SHAP audits & isotonic calibration  
+Lambda cold starts – regional edge deploy, weight caching  
+Tailwind v4 breaks – use official codemod, lock to stable  
+Privacy audits – S3 30-day purge, differential privacy research  
+Scope creep – phase gates per roadmap, atomic feature tickets
+
+Appendix
+========
+
+• Next.js 15 App Router + React 19 overview [DEV Community](https://dev.to/robertobutti/how-to-build-a-dynamic-website-with-nextjs-15-app-router-react-19-storyblok-and-bun--2972?utm_source=chatgpt.com)  
+• Tailwind v4 design-token notes [Tailwind CSS](https://tailwindcss.com/blog/tailwindcss-v4?utm_source=chatgpt.com)  
+• Supabase RLS docs [Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security?utm_source=chatgpt.com)  
+• Upstash per-request Redis pricing [Upstash: Serverless Data Platform](https://upstash.com/pricing/redis?utm_source=chatgpt.com)  
+• Upstash Workflow getting-started [Upstash: Serverless Data Platform](https://upstash.com/docs/workflow/getstarted?utm_source=chatgpt.com)  
+• Qdrant Cloud introduction [Qdrant](https://qdrant.tech/documentation/cloud-intro/?utm_source=chatgpt.com)  
+• Autumn Billing plugin guide [Better Auth](https://www.better-auth.com/docs/plugins/autumn?utm_source=chatgpt.com)  
+• Prompt-engineering tips to cut hallucinations [God of Prompt](https://www.godofprompt.ai/blog/9-prompt-engineering-methods-to-reduce-hallucinations-proven-tips?utm_source=chatgpt.com)
+
+</PRD> ::contentReference\[oaicite:15\]{index=15}
+
+## Prompt:
+# Design Process and Guidelines
+
+## Guidelines
+
+### High-level Guidelines
+Guidelines are numberd for convenience but are **not ordered** by any particular priority.
+
+1. Don’t overwhelm viewers
+1. Avoid visual clutter
+1. Avoid poor visual design 
+1. Carefully chose KPIs
+1. Align with existing workflows
+1. Don’t add too much data
+1. Provide for consistency
+1. Provide for interaction affordances
+1. Manage complexity
+1. Organize charts symmetrically
+1. Group charts by attribute
+1. Order charts by time
+1. Balance data + space 
+1. Increase information
+1. Avoid redundancy of information
+1. Show information, rather than data
+1. Design is an iterative process
+1. Context is very important
+1. State your meta data
+1. Use color carefully
+
+### Guidelines involving Design Patterns
+
+1. Consider [design tradeoffs](tradeoffs.html)
+1. Where space allows, provide redundant and complementary views (_visual representation_) and levels of abstraction (_data information_) for your data:
+   * e.g., show selected _numbers_ alongside _trend-arrows_ and  _signature charts_.
+   * e.g., more abstract encodings can occupy more screen space to emphasize importance/relevance/etc;
+   * e.g., use _single values_, _derived values_ and _thresholds_ to show key data points at a glance;
+1. For transparency, provide _meta information_:
+   * e.g., state the _data source_, provide _disclaimers_ about how data were processed;
+   * e.g., use _tooltips_ or _multiple pages_ if space is constrained;
+1. Avoid _overflow_ structure in _analytic dashboards_ to facilitate comparison;
+   * e.g., use _screenfit_ or _multiple pages_ dashboards that fit encodings on screen;
+1. Minimize repetitive data using abstraction (to emphasize key data) and _parameterization_ (to support _personalization_);
+1. Consider the dashboard types best suited to the dashboard audience and their informational needs, and use their characteristic design patterns as a checklist for design;
+1. Ensure a consistent color scheme across the entire dashboard, either by reusing colors for the same data and value, or by creating a dedicated and clearly distinguishable scheme for each visualization. 
+1. Chose a layout that expresses relations between widgets; following a given _schema_, _grouping_ by type or task, structured in a _table_, or _stratified_ to show important information on top.
+
+## Design Tradedoffs
+
+Dashboard design involves many tradeoffs, some of which are pictured in the schema below. Arrows are representative for relationships between the variables. A detailed schema and discussion on tradeoffs can be [found here](tradeoffs.html).
+
+![](docs/assets/figures/schema1.png)
+
+# Process Outline
+
+Below is a possible outline for a design process. Stages should serve as a guide though the process, rather than strict instructions. Any design process is iterative, requires re-making decisions, exploring alternatives, and crticialy evaluating current solutions.
+
+## Stage 0: Clarify the context
+
+At this stage, you want to clarify the context in which your dashboard is being used in. This might require making decisions about some of these parameters. The more clearly you can articulate these decisions and parameters, the better you can make design decisions in your dashboard design process. 
+
+* What is your **audience**? 
+  * What do they know about your data and visualization? 
+  * What do they know about the data? 
+  * You can think of real people in your life that might use the dashboard. In design, that is called a [persona](https://www.interaction-design.org/literature/topics/personas).
+* What is the **setting** in which they engage with the dashboard? 
+  * Is this a computer screen? A mobile screen? A webite?  
+  * Can they interaction? 
+  * How much time do they have to view/interact with the dashboard? 
+  * How frequently will they consult it? 
+* What are the **tasks and decisions** your audience wants to perform?
+  * what decisions do they want to make with the data? 
+  * What information do they need?
+  * Do they simply want to look up values? Do they want to compare? Do they want to analyze?   
+* What **information** do they need to fulfill these tasks / make these decisions?
+  * do they need to see all of the data? 
+  * what data is most relevant?   
+
+## Stage 1: Data & Information
+
+![](docs/assets/figures/patterns-data.png)
+
+**[Design Patterns & Examples](patterns.html#data-information)**
+
+At this stage, you want to clarify which information from the dataset is important for the user in a given task (see Stage 0). The design patterns give you some ideas what information and how much information you want to provide about your data set. For some of these options we can say they are showing 'more' data, for others, we can say they abstract and show 'less' data.  
+
+## Stage 2: Structure
+
+![](docs/assets/figures/patterns-structure.png)
+
+**[Design Patterns & Examples](patterns.html#structure)**
+
+At this stage, you should think about the overall structure of your information and whether you 
+* can display everything a single page (or screen), or 
+* whether you need multiple pages to show all the information you identified in stage 1.
+
+A page / screen here refers to any consistent unit of information you are showing to the user at once. Information in your dashboard can be split across multiple pages.  If you have multiple pages, you want to think about their relationship and what information goes onto what page. A meaningful structure helps people navigating your dashboard (application). At the same time it helps you thinking about consistency across the individual design. For example, a parallel structure implies there is some visual consistency in the layout and information shown on each page. Vice versa, a hierarchical structure, e.g., implies there is more and more detail the further you drill down.
+
+## Stage 3: Visual Representations
+
+![](docs/assets/figures/patterns-vis.png)
+
+**[Design Patterns & Examples](patterns.html#visual-representations)**
+
+At this stage you want to find visual representations for your data and information (for each page). Similar to data, these visual representations can show more detail and using more screenspace, or they can be more concise and using less screenspace. You can match different design patterns about Data and Visual Representation.
+
+**Specific guidelines**
+
+1. Where space allows, **provide redundant and complementary views**
+(visual encodings) and levels of abstraction (data information) for
+your data:
+  * e.g., show selected numbers alongside trend-arrows
+and signature charts
+  * e.g., more abstract encodings can occupy more screen space
+to emphasize importance/relevance/etc
+  * e.g., use single values , derived values and thresh-
+olds to show key data points at a glance;
+1. **Minimize repetitive data using abstraction** (to emphasize key data)
+and parameterization (to support personalization );
+1. Try to ensure a **consistent color scheme** across the entire dash-
+board, either by reusing colors for the same data and value, or by
+creating a dedicated and clearly distinguishable scheme for each
+visualization.
+
+## Stage 4: Page Layout
+
+![](docs/assets/figures/patterns-layout.png)
+
+**[Design Patterns & Examples](patterns.html#page-layout)**
+
+At this stage, you develop a layout of your page. You need to organize the individual components and visual representations into a meaningful structure. That structure should reflect how the components are related and of which importance they are to the user. For example, if you have lots of similar information (such as line charts for some data) you may consider a parallel (table) structure that emphsizes repetition and where each widget is containing similar information about its respective data. 
+
+## Stage 5: Screenspace
+
+![](docs/assets/figures/patterns-screensize.png)
+
+**[Design Patterns & Examples](patterns.html#screenspace)**
+
+At this stage you need to decide how to deal with your screen space. You have several options to 
+* try to fit everything into a single screen, or
+* find ways to interactively show data you cannot fit onto a static screen. 
+
+**Guidelines**
+
+1. **Avoid overflow structure in analytic dashboards** to facilitate
+comparison;
+   * e.g., use flat or paginated dashboards that fit encod-
+ings on screen;
+
+## Stage 6: Interactivity 
+
+![](docs/assets/figures/patterns-interaction.png)
+
+**[Design Patterns & Examples](patterns.html#interactions)**
+
+At this stage you will think about the specific interaction components you need to support
+* exploration 
+* focus & filter
+* navitation
+* personalization
+
+1. Interaction can be a powerful means to personalize, explore, navigate, and focus. 
+1. Minimize interaction: If you can solve something with minimal or no interaction, go for it.
+
+---
+
+Context: I just found this dashboard data patterns, and they have a process to ensure that we are using the right data pattern. I would like to take all the stuff we have from this one chat and this group and walk through the steps so we can ensure that we have a good dashboard. 
+
+Instruction: Start at step 0 in the dashboard design process.
+
+## Response:
+Stage 0 — Clarify the Context
+-----------------------------
+
+_(applying the dashboard-design process to the Tech-Skill Coach platform you’ve been architecting)_
+
+### 0.1 Audience
+
+| Persona (real examples you’ve modelled) | Domain knowledge | Data-viz familiarity | Key motivation & pain |
+| --- | --- | --- | --- |
+| **Dana — L&D Manager** (mid-size manufacturer) | Knows course names, completion KPIs, grant rules | Comfortable with bar/line charts; not a data scientist | Must cut dropout to keep a $250 k grant; hates lagging LMS reports |
+| **Miguel — Community-College Dean** | Understands cohorts, funding formulas | Medium; reads Tableau workbooks weekly | Needs proof of student progress for state performance funding |
+| **Priya — Boot-camp Director (non-profit)** | Deep program detail; limited analytics tooling | Low; uses Google Sheets & Canva | Mentors overwhelmed; wants quick at-risk flags |
+| **Front-line Learner** (Alex, veteran) | Subject-matter novice; minimal data-viz experience | Low; expects “credit score-like” simplicity | Wants to see if they’re on track without drowning in metrics |
+
+### 0.2 Setting & Device Constraints
+
+| Scenario | Device / Screen | Interaction window | Frequency |
+| --- | --- | --- | --- |
+| Office desktop (Dana, Miguel) | 24-inch monitor, landscape | 3-10 min between meetings | Daily or weekly |
+| Boot-camp classroom (Priya) | 13-inch laptop, shared projector | 15 min mentor stand-ups | 3× per week |
+| Learner mobile check-in | Mobile browser, portrait | < 2 min on break | Daily streak |
+
+_Implications:_
+
+*   **Responsive grid** must collapse to single-column on mobile.
+*   Critical KPIs need to surface within the first scroll-viewport (≈ 720 px).
+*   Hover-only affordances require tap equivalents.
+
+### 0.3 Tasks & Decisions
+
+| Role | Decisions they need to make | Dashboard support |
+| --- | --- | --- |
+| Dana (Admin) | 1 ) Identify at-risk learners  
+2 ) Trigger bulk nudges  
+3 ) Prepare grant PDF | • Cohort tiles with red/yellow thresholds  
+• Bulk Messaging Center link  
+• Export PDF modal |
+| Miguel (Dean) | 1 ) Compare program lines vs target  
+2 ) Drill into outlier cohort | • Trend spark-lines sorted by largest gap  
+• Filter pill opens Learner Table |
+| Priya (Mentor lead) | 1 ) Which learner to coach today?  
+2 ) See action history | • At-Risk Spotlight list  
+• Kanban “Awaiting Learner” lane |
+| Learner | 1 ) Am I on track?  
+2 ) What’s next action? | • Progress bars for Vision/Grit/Logic  
+• Roadmap card with single CTA (“Complete Module 3”) |
+
+### 0.4 Information Required
+
+| Metric / Info | Why user needs it | Level of detail shown |
+| --- | --- | --- |
+| Readiness Score (0-100) | Immediate health snapshot | Single value + color badge |
+| SHAP top drivers | Understand “why” score moved | Top 3 chips; tooltip gives weight |
+| Cohort completion trend | Evidence for exec/grant slides | 12-week line chart (aggregated) |
+| Intervention status | Track mentor workload | Kanban card count per lane |
+| Billing seat usage | Know renewal cost | Seat gauge (used / purchased) |
+
+We **will not** surface raw CLIP embedding vectors or every game event—those stay in drill-down views or tooltips to avoid overwhelming viewers (Guidelines 1, 2, 6, 10).
+
+* * *
+
+#### Ready for Stage 1?
+
+With audience, setting, tasks, and necessary information captured, the next step is **Stage 1: Data & Information**—deciding which derived values, thresholds, and abstraction levels to display for each role while respecting the guidelines on minimal clutter and value-over-raw-data.
+
+## Prompt:
+Ask me clarifying questions. Give me some assumptions too.
+
+## Response:
+### Clarifying Questions (so Stage 1 choices are rock-solid)
+
+| Area | Question | Why it matters (design guideline tie-in) |
+| --- | --- | --- |
+| **Metrics & KPIs** | 1\. Which single KPI will top-level admins cite most in QBRs—overall completion %, average Readiness Score, or something else? | Avoids “too much data” and picks the right hero metric (Guidelines 4, 14). |
+|  | 2\. Do grant reviewers care about **absolute numbers** (e.g., 45 completions) or **percentage change** vs last cohort? | Decides whether we show raw counts, deltas, or both (Guidelines 4, 15). |
+| **Learner dashboard** | 3\. Should learners see separate scores for each track or just their recommended track? | Impacts clutter vs relevance (Guidelines 1, 6, 18). |
+|  | 4\. Is the streak mechanic an optional motivation aid or a contractual program requirement? | Determines prominence and interaction affordance (Guidelines 2, 8). |
+| **Admin workflows** | 5\. When Dana bulk-messages at-risk learners, does she normally customise copy or use canned templates? | Decides if we need a rich-text editor or a quick “template + variables” form (Guidelines 5, 8). |
+|  | 6\. Do mentors log coaching notes inside this system or in an external LMS/CRM? | Influences whether the Kanban cards need an inline notes field (Guidelines 5, 8, 10). |
+| **Billing & Seats** | 7\. Are seat overages charged automatically via Autumn or reviewed manually each quarter? | Affects if we surface real-time seat gauge vs monthly report (Guidelines 5, 11). |
+| **Devices & access** | 8\. Roughly what % of learners access the dashboard primarily on mobile? | Confirms how aggressively we must optimise for small screens (Guidelines 2, 10). |
+| **Localization** | 9\. Which three languages are priority after English? | Impacts i18n scope and right-to-left checks (Guidelines 7, 20). |
+| **Data latency** | 10\. Is “nightly” scoring acceptable, or do mentors expect near-real-time updates (< 5 min)? | Guides need for live socket updates vs ISR revalidation (Guideline 8, 20). |
+
+### Current Working Assumptions
+
+| ID | Assumption | Risk if wrong |
+| --- | --- | --- |
+| A-1 | Readiness Score and completion % are the top KPIs for admins. | Might spotlight wrong metric, breaking Guideline 4. |
+| A-2 | Learners care only about their recommended track, not all tracks. | Could hide info some learners want, violating Guideline 18. |
+| A-3 | Bulk messaging uses mostly canned templates; minimal custom copy. | If heavy customisation needed, composer UX will feel cramped. |
+| A-4 | Seat overages are billed automatically; admins just monitor gauge. | If manual, they’ll need CSV export + approval flow. |
+| A-5 | ≤ 30 % of learners are primarily mobile; grid can collapse but not mobile-first. | If > 50 %, we must rethink layout hierarchy. |
+| A-6 | English, Spanish, Portuguese are first L10n targets. | Wrong locales complicate font/RTL requirements. |
+| A-7 | Nightly score recalculation is enough for mentors’ daily planning. | If they expect < 1 h latency, Upstash/Inngest setup changes. |
+
+Let me know which assumptions hold and answer any questions—then we can proceed to **Stage 1: Data & Information** with confidence.
+
+## Prompt:
+As for the audience, it's not just the L&D manager. It's like the CHRO, the CLO, CFO and COO. Basically the C-Suite. We aren't interested in non-profits as much. Boot camps and community colleges are too difficult to work with. It's both cultural and some constraint on their finances and flexibility. They might use it, but we're not targeting them. We primarily want Leaders of Philantropic Funded Foundations instead. Culturally, they have a business background, and they are not constrained by finances. They have a great mindset that makes them a great customer. This is a corporate focused admin dashboard.
+
+## Response:
+### Updated Audience Snapshot
+
+| Persona | Domain Knowledge | Data-viz Fluency | Key Pain / Motivation |
+| --- | --- | --- | --- |
+| **CHRO / CLO** (Chief People / Learning Officers) | Understand HRIS, talent metrics, completion KPIs | Medium–High (familiar with dashboards) | Need early signals to justify multimillion-dollar reskill budgets; fear poor optics with board. |
+| **CFO** | Deep cost-benefit analysis; ROI focus | High (lives in PowerBI, Tableau) | Wants proof that $ spent on training yields wage uplift or productivity gains. |
+| **COO** | Operational efficiency, throughput | Medium | Needs workforce readiness data tied to production schedule. |
+| **Foundation Program Officer** (Philanthropic funder with business background) | MBA-level finance; impact metrics | Medium | Must demonstrate measurable social ROI; less price-sensitive, more outcome-sensitive. |
+| **Front-line Learner** (Corporate employee) | Limited analytics jargon | Low | Needs a simple, motivating score and next steps. |
+
+**Device / Setting** (no change): 24″ office monitors for execs; mobile/laptop for learners.
+
+* * *
+
+Assumptions (rev 1)
+-------------------
+
+| ID | Assumption | Confidence | Risk if inaccurate |
+| --- | --- | --- | --- |
+| B-1 | Top KPI for C-Suite is **overall completion % vs target** and **per-seat ROI ($ return / $ spend)**. | Med-High | Wrong KPI => dashboard fails to impress CFO. |
+| B-2 | Foundation officers care about **impact uplift** (completion % × new salary delta) over raw seat counts. | Med | Might need extra slicers for demographic impact. |
+| B-3 | Execs have < 5 min per dashboard visit, mostly on large screens. | High | If they use tablets often, layout priorities change. |
+| B-4 | Bulk messaging/tasks are executed by CLO’s ops team, not by execs. | High | Messaging center can be hidden from C-Suite role. |
+| B-5 | Real-time (< 5 min) score updates are **nice-to-have**, nightly is acceptable. | Med | If COO wants shift scheduling tied to scores, needs faster updates. |
+| B-6 | English first; Spanish & Portuguese optional later; exec dashboard starts English-only. | High | Multi-lingual can wait Phase 2. |
+
+* * *
+
+### Adjusted Clarifying Questions
+
+1.  **KPIs:** Do CHRO & CFO both accept “per-seat ROI” computed as `(annual salary uplift × % completion) / seat cost` ?
+2.  **Impact Reporting:** Foundation officers—do they require social-impact metrics (e.g., diversity uplift) alongside completion?
+3.  **Executive Drill-Down:** Should execs be able to open individual learner modals, or just aggregate views?
+4.  **Data Latency:** Would a same-day (hourly) refresh satisfy COO scheduling use-cases, or do any workflows need < 5 min?
+5.  **Security / Data Access:** Will the C-Suite login through existing SSO (Okta/Azure AD), or can we ship with Supabase email-link auth initially?
+6.  **Billing Visibility:** Do exec dashboards need live billing/seat gauges from Autumn, or is that restricted to Finance portal?
+7.  **Foundation View:** Should the philanthropic funder have a **separate tenant** (isolated data) or a “read-only exec role” inside the corporate tenant?
+
+* * *
+
+Once we lock these points, we’ll move into **Stage 1: Data & Information**, choosing which derived metrics and abstraction levels to surface for each exec role while keeping clutter low and ROI front-and-centre.
+
+## Prompt:
+Answers to questions:
+
+1.  Likely yes, they might want more details on the per-seat ROI calculation. More KPIs.
+2.  Clearer, more overtly time-sensitive impact reporting is needed initially, but it can be slightly fuzzier later.
+3.  Yes, executives should be able to drill down into individual learner data.
+4.  COOs are the least served of the C-Suite/Officers, but real-time updates would be great.
+5.  Likely we can start with existing security and data access protocols. Supabase can do SSO. We might do better-auth for simplicity.
+6.  Yes, billing should only be handled by financial and leadership teams.
+7.  Somewhat, a separate tenant might be needed for the foundation view.
+
+## Response:
+Stage 1 — Data & Information
+----------------------------
+
+_(selecting exactly which facts, derived values, and abstraction levels each screen must expose, based on your clarified exec-level goals)_
+
+### 1.1 Master KPI Set
+
+| Primary KPI | Audience | Granularity | Refresh cadence | Why it matters |
+| --- | --- | --- | --- | --- |
+| **Overall Completion %** (cohort) | CHRO, CLO, Foundation | Org-wide & per-track | Hourly roll-up | Board-level success metric |
+| **Per-Seat ROI** = `(salary uplift × completion %) ÷ seat cost` | CFO, CHRO | Org-wide & per-track; drill to learner | Hourly | Justifies spend in dollars |
+| **On-Track Learners** (# with Score ≥ 70) | COO, CLO | Count & % | Near-real-time (< 5 min) | Signals operational readiness |
+| **At-Risk Learners** (# with Score < 50) | CLO, Mentors | Count & list | Real-time | Triggers interventions |
+| **Impact Clock** (hrs since last at-risk → recovered) | COO, Foundation | Single number | Real-time | Time-sensitive impact narrative |
+| **Intervention Success Rate** (tasks Done / Total) | CLO | Cohort & mentor | Nightly | Coach efficacy |
+| **Seat Utilisation** (used / purchased) | Finance | Org | Real-time | Controls overage cost |
+
+_All other raw metrics (game accuracy %, CLIP cosine, SHAP value arrays) remain available only in tooltips or learner drill-downs to avoid clutter (Guidelines 1, 6, 14)._
+
+* * *
+
+### 1.2 Derived vs Raw Data Matrix
+
+| Data Source | Raw Field | Derived / Displayed | Dashboard Level |
+| --- | --- | --- | --- |
+| Vision Board | Bounding-box area, hue array | Goal Theme label, Valence score | Learner modal tooltip |
+| Games API | Accuracy, retries, duration | **Cognitive Index** (0-1) | Learner radar & cohort heat-map |
+| Salary Table (BLS + HRIS) | Median salary post-cert | **Salary Uplift** (Δ $) | ROI card (exec) |
+| Mentor Task Table | Task status, timestamps | Intervention Success % | Org Dashboard & Kanban lane header |
+| Billing (Autumn) | Seats used, plan limit | Seat Gauge + Over/Under badge | Finance panel only |
+
+This mapping respects **“show information, not data”** (Guideline 15) while giving power users a path to raw fields.
+
+* * *
+
+### 1.3 Information Abstraction Levels
+
+| Abstraction Tier | Screen | Example Encoding | Rationale |
+| --- | --- | --- | --- |
+| **High-level (1-click)** | Org Dashboard | Stat tile “Per-Seat ROI 3.4×” | Execs have < 5 min; immediate clarity |
+| **Mid-level** | Segment Overview cards | Heat-map by track; spark-line trend | CLO drills before daily stand-up |
+| **Detail** | Learner Modal | SHAP chips, score trend line | Mentors need actionable insight |
+| **Raw** | Tooltip / CSV export | CLIP labels, game event list | Meets transparency & audit needs |
+
+The layered approach manages complexity and aligns with _Page Layout_ Stage guidelines.
+
+* * *
+
+### 1.4 Real-Time vs Batch Decisions
+
+| Metric | Latency Target | Implementation note |
+| --- | --- | --- |
+| At-Risk & On-Track counts | < 5 min | Upstash Redis pub/sub + ISR revalidate 300 s |
+| Completion % & ROI | Hourly | Inngest scheduled job updates materialised views |
+| SHAP driver list | Nightly | Heavy calc; fine for mentors next morning |
+
+Real-time updates focus on COO’s operational pain, while heavier analytics batch safely.
+
+* * *
+
+### 1.5 Meta Information & Transparency
+
+*   Dashboard footer lists **data sources** (Supabase HRIS snapshot, BLS wage table, CLIP v1 weights).
+*   Mouse-over tooltip on ROI card shows salary uplift formula and seat cost assumptions.
+*   “Last updated” timestamp sits top-right on every tile (Guideline 19).
+
+* * *
+
+### 1.6 First-screen Information Arrangement (exec desktop, 1440 × 900)
+
+1.  **Hero strip** (left-to-right): Completion %, Per-Seat ROI, Impact Clock, Seat Gauge.
+2.  **Trend row**: Line spark-lines for each track completion vs target.
+3.  **At-Risk Spotlight** list (5 learners max) with filter pill → drill-down table.
+
+Symmetric layout and grouping by KPI category match Guidelines 10 & 11.
+
+* * *
+
+With KPIs, abstraction tiers, and latency decisions now locked, we have the information blueprint required to proceed to **Stage 2: Structure**—deciding page count, grouping scheme, and navigation hierarchy.
+
+## Prompt:
+1.2: Only Vision, Games, Personality Exams (OCEAN) are used data points. 
+1.3: What Segment Overview & Modal of Learner Modal?
+1.4: Elaborate on At-Risk & On-Track counts
+1.5: Not tracking salary
+
+Everything's perfect otherwise. Yes, I am. Make your adjustments and let's start stage two.
+
+## Response:
+Thought for 15 seconds
+
+I need to adjust Stage 1 based on feedback:
+
+*   Focus on Vision Board, Games, Personality Exams (OCEAN), and remove salary-related data. CFO still needs ROI, but I might adjust by focusing on retention or cost savings, not salary tracking.
+*   Clarify Segment Overview & Learner Modal definitions, and refine the explanation for At-Risk & On-Track counts, with clear thresholds.
+*   Remove salary meta and provide the new Stage 2 structure, including page layout (single vs. multi-page) and hierarchy. Craft responses accordingly.
+
+Done
+
+### Stage 1 Adjustments (incorporating your clarifications)
+
+#### 1.2 Revised Data→Display Matrix
+
+| Data Source | Raw Fields | Derived / Displayed | Dashboard Level |
+| --- | --- | --- | --- |
+| **Vision Board** | image-layer, bounding-box %, HSV palette | • Goal Theme label  
+• Valence score | Learner modal + At-Risk calc |
+| **Senseii Games** | accuracy, retries, avg duration | **Cognitive Index** (0-1) | Learner radar + cohort heat-map |
+| **Personality / Grit** | Big-Five (OCEAN), Grit items | • Conscientiousness %  
+• Grit score | Learner radar & SHAP chips |
+
+No salary, wage, or external labour data will be stored or surfaced.
+
+* * *
+
+#### 1.3 What is “Segment Overview”? What is “Learner Modal”?
+
+| Term | Meaning in this dashboard | Why it exists |
+| --- | --- | --- |
+| **Segment Overview** | A grid of **track cards** (e.g., Cyber Security, Data Analytics) showing completion %, average Readiness, % at-risk. Each card includes a trend spark-line and a click-through to a **filtered learner table**. | C-Suite needs one-click drill from org-wide KPIs to specific training tracks or business units without sifting rows (Guidelines 5, 11). |
+| **Learner Modal** | A side-drawer (or full modal on desktop) opened from the learner table, displaying that individual’s Vision thumbnail, Readiness trend, radar of Vision/Grit/Logic, SHAP chips, and intervention history. | Execs and mentors can inspect root causes quickly without leaving the table context (Guidelines 8, 9). |
+
+* * *
+
+#### 1.4 At-Risk & On-Track Counts (elaboration)
+
+| Classification | Threshold logic\* | Refresh | Display |
+| --- | --- | --- | --- |
+| **At-Risk** | Readiness Score < 50 **OR** Sharp 2-day drop > 15 pts | Redis pub/sub every 5 min | Red badge on Org tiles; learner row tagged “At-Risk” |
+| **On-Track** | Readiness Score ≥ 70 and no 7-day downward trend | Same 5 min loop | Green badge; visible in KPI strip |
+| **Watchlist** | 50 ≤ Score < 70 **AND** negative slope past 24 h | Same | Yellow badge |
+
+\*Thresholds configurable in Settings for future flexibility.
+
+Counts are recalculated by an **Upstash QStash** serverless function that pulls the latest learner scores from Postgres and pushes the new numbers to Redis; Next.js 15 uses ISR re-validation at 300 s to update tiles. Real-time websockets can be added later if COO tests show need for sub-minute updates.
+
+* * *
+
+#### 1.5 Removed Salary & ROI
+
+*   All salary-based ROI metrics deleted.
+*   CFO panel will focus on **Seat Utilisation** (used vs purchased) and **Completion Cost per Learner** (spend ÷ completions), which do not require wage data.
+
+* * *
+
+Stage 2 — Structure (pages & navigation)
+----------------------------------------
+
+### 2.1 Page Map (hierarchical)
+
+1.  **Org Dashboard** (Exec Home)  
+    • KPI strip (Completion %, Cost/Completion, At-Risk count, Seat Gauge)  
+    • Segment Overview grid  
+    • At-Risk Spotlight list (top 5 learners)  
+    • Buttons → Export Report · Settings
+2.  **Learner Table** (filtered by segment or spotlight link)  
+    • Search, sort, filter chips  
+    • Columns: Name · Dept · Readiness bar · Status badges  
+    • Row click → **Learner Modal**
+3.  **Learner Modal / Drawer**  
+    • Vision thumbnail, score trend, radar, SHAP chips  
+    • Notes timeline & add‐note field  
+    • “Create Intervention” button (adds card to Kanban)
+4.  **Intervention Kanban** (mentor workspace)  
+    • Lanes: Planned · In-Progress · Awaiting Learner · Done  
+    • Drag-drop cards; WIP counters at top
+5.  **Messaging Center** (ops team)  
+    • Left pane campaign list · right pane composer/analytics
+6.  **Finance Panel** (read-only for CFO)  
+    • Seat utilisation gauge, completion-cost trend, Autumn Billing portal link
+7.  **Settings**  
+    • Thresholds, SSO config, Foundation tenant toggle
+8.  **Learner Dashboard** (separate route, different auth role)  
+    • Vision/Grit/Logic bars · Readiness trend  
+    • Roadmap card with next milestone · Streak widget
+
+#### Foundation Tenant
+
+If toggled, a **read-only Org Dashboard** is served from an isolated Supabase schema, ensuring data separation while preserving UX.
+
+* * *
+
+### 2.2 Navigation Flow (high-level)
+
+Org Dashboard → (tile click) → Learner Table → (row click) → Learner Modal  
+Learner Modal → (create task) → Intervention Kanban  
+Org Dashboard → (Export btn) → Report modal  
+Org Dashboard → Finance Panel via top-nav  
+Learner (employee) logs in → Learner Dashboard
+
+This structure achieves:
+
+*   **Single top-level page** for execs (Guideline 10)
+*   **Drill-down** path that never exceeds three clicks to raw data (Guideline 8)
+*   **Parallel sibling pages** (Messaging, Finance, Settings) avoiding overflow (Guideline 12)
+
+* * *
+
+### 2.3 Screen Count vs Cognitive Load
+
+*   Execs see **one primary page** + optional drill-downs; avoids overwhelm (Guidelines 1, 2).
+*   Mentors live in **Kanban** and **Learner Modal**, optimised for frequent updates.
+*   Learners have **their own dashboard route**, mobile-friendly and stripped of admin data.
+
+* * *
+
+Stage 2 establishes the information hierarchy and page grouping. Next, **Stage 3: Visual Representations** will match each data point to a chart/table component (e.g., tiles, spark-lines, radar, heat-maps) while keeping color and layout symmetry.
+
+## Prompt:
+Make 2.1 more structured. 2.1.2 should have a transition from Org dashboard (prescriptive + highly abstract KPIs) to to more detailed aggregations of organization, then go to the learner table. Exec (KPI + Prescriptive) -> Detailed Agg (probability distributions and regions) -> Learner Table. All else is good. All else is good.
+
+Rest Of 2: In terms of priority, our primary focus is on the analytics and of course the settings. The intervention and the messaging and the finance panel are not fully necessary right now, but they can be doable, but they're not necessary.
+
+## Response:
+### 2.1 Structured Page Map & Drill Path
+
+| Level | Page / Route | Purpose & Content | Transition From | Transition To |
+| --- | --- | --- | --- | --- |
+| **2.1.1 Exec KPI Hub** | **Org Dashboard** (`/dashboard`) | • Hero KPI strip (Completion %, Cost-per-Completion, At-Risk #)  
+• Prescriptive badges (“Increase mentor check-ins”, “Allocate 15 more seats”)  
+• Export & Settings buttons | — (default landing for execs) | **Detailed Aggregations** via “View Details” CTA |
+| **2.1.2 Detailed Aggregations** | **KPI Deep-Dive** (`/dashboard/segments`) | • Probability-distribution heat-map by track & region  
+• Trend lines vs targets  
+• Segment Overview cards (each clickable) | Exec KPI Hub (View Details) | **Learner Table** filtered by clicked segment |
+| **2.1.3 Learner Table** | **Learner Directory** (`/dashboard/learners`) | • Search, filters, sortable columns  
+• Readiness bars & status badges for each learner | Detailed Aggregations (segment click) | **Learner Modal** (row click) |
+| **2.1.4 Learner Modal** | Side-drawer modal | • Vision image, radar, SHAP chips  
+• Notes & intervention button | Learner Table (row click) | (optional) Intervention Kanban |
+
+> **Primary navigation flow:**  
+> **Org Dashboard** ➜ **KPI Deep-Dive** ➜ **Learner Table** ➜ **Learner Modal**
+
+* * *
+
+### 2.2 Parallel (Lower-Priority) Pages
+
+| Page | Status in Roadmap | Rationale |
+| --- | --- | --- |
+| **Settings** (`/settings`) | **MVP-critical** | Houses thresholds, SSO, foundation-tenant toggle. |
+| **Intervention Kanban** (`/kanban`) | Phase “Pilot Enhancements” | Useful for mentors; execs can wait. |
+| **Messaging Center** (`/messages`) | Phase “Pilot Enhancements” | Automates nudges; not required for analytics launch. |
+| **Finance Panel** (`/finance`) | Phase “Scale” | Seat utilisation & billing—only finance team needs it initially. |
+| **Learner Dashboard** (`/learner`) | Parallel learner-only route | Shipped with MVP but isolated from exec flow. |
+
+**Priority order:**
+
+1.  Analytics path (Org Dashboard → KPI Deep-Dive → Learner Table → Modal)
+2.  Settings
+3.  Optional: Intervention Kanban → Messaging Center → Finance Panel
+
+* * *
+
+With the hierarchy and priorities clarified, we can next tackle **Stage 3: Visual Representations**, mapping each KPI strip, heat-map, trend line, and table to specific shadcn/ui components and color-token usage.
+
+
+
+---
+Powered by [ChatGPT Exporter](https://www.chatgptexporter.com)
