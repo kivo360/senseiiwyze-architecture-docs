@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Display Debug Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-section {
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+        .svg-container {
+            border: 2px solid red;
+            margin: 10px 0;
+            overflow: auto;
+            max-width: 100%;
+            max-height: 400px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>SVG Display Debug Test</h1>
+    <div id="console-log"></div>
+    
+    <div class="test-section">
+        <h2>Test 1: Direct IMG Tag</h2>
+        <div class="svg-container">
+            <img src="assets/diagrams/deployment_pipeline.svg" alt="Deployment Pipeline" style="max-width: 100%; height: auto;" />
+        </div>
+        <div class="svg-container">
+            <img src="assets/diagrams/database_schema.svg" alt="Database Schema" style="max-width: 100%; height: auto;" />
+        </div>
+        <div class="svg-container">
+            <img src="assets/diagrams/data_flow_diagram.svg" alt="Data Flow" style="max-width: 100%; height: auto;" />
+        </div>
+        <div class="svg-container">
+            <img src="assets/diagrams/api_endpoints_diagram.svg" alt="API Endpoints" style="max-width: 100%; height: auto;" />
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Object Embed</h2>
+        <div class="svg-container">
+            <object data="assets/diagrams/deployment_pipeline.svg" type="image/svg+xml" width="700" height="400">
+                <p>SVG not supported or failed to load</p>
+            </object>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Iframe</h2>
+        <div class="svg-container">
+            <iframe src="assets/diagrams/deployment_pipeline.svg" width="700" height="400"></iframe>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: AJAX Load Status</h2>
+        <div id="ajax-results"></div>
+    </div>
+
+    <script>
+        const logDiv = document.getElementById('console-log');
+        
+        function log(message, type = 'info') {
+            const p = document.createElement('p');
+            p.className = type;
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(p);
+        }
+
+        // Test file accessibility via AJAX
+        const svgFiles = [
+            'assets/diagrams/deployment_pipeline.svg',
+            'assets/diagrams/database_schema.svg', 
+            'assets/diagrams/data_flow_diagram.svg',
+            'assets/diagrams/api_endpoints_diagram.svg'
+        ];
+
+        svgFiles.forEach(file => {
+            fetch(file)
+                .then(response => {
+                    if (response.ok) {
+                        log(`✓ ${file} - File accessible (${response.status})`, 'success');
+                        return response.text();
+                    } else {
+                        log(`✗ ${file} - HTTP ${response.status} ${response.statusText}`, 'error');
+                    }
+                })
+                .then(content => {
+                    if (content) {
+                        log(`✓ ${file} - Content loaded (${content.length} chars)`, 'success');
+                    }
+                })
+                .catch(error => {
+                    log(`✗ ${file} - Error: ${error.message}`, 'error');
+                });
+        });
+
+        // Monitor img load events
+        document.querySelectorAll('img').forEach((img, index) => {
+            img.onload = () => {
+                log(`✓ Image ${index + 1} loaded successfully`, 'success');
+            };
+            img.onerror = (e) => {
+                log(`✗ Image ${index + 1} failed to load: ${img.src}`, 'error');
+            };
+        });
+
+        // Check console for additional errors
+        window.addEventListener('error', (e) => {
+            log(`JavaScript Error: ${e.message}`, 'error');
+        });
+
+        log('Debug test initialized. Check results above.', 'info');
+    </script>
+</body>
+</html>

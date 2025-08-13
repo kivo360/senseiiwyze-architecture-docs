@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Display - Fixed Version</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        .svg-container {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .svg-container h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .svg-display {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+            background: #f9f9f9;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HR Intelligence Platform - SVG Diagrams</h1>
+    
+    <div class="svg-container">
+        <h2>🔄 CI/CD Deployment Pipeline</h2>
+        <div id="pipeline-container" class="svg-display">
+            <div class="loading">Loading deployment pipeline diagram...</div>
+        </div>
+    </div>
+    
+    <div class="svg-container">
+        <h2>🗄️ Database Schema</h2>
+        <div id="schema-container" class="svg-display">
+            <div class="loading">Loading database schema diagram...</div>
+        </div>
+    </div>
+    
+    <div class="svg-container">
+        <h2>🔄 Data Flow Diagram</h2>
+        <div id="dataflow-container" class="svg-display">
+            <div class="loading">Loading data flow diagram...</div>
+        </div>
+    </div>
+    
+    <div class="svg-container">
+        <h2>🔗 API Endpoints Architecture</h2>
+        <div id="api-container" class="svg-display">
+            <div class="loading">Loading API endpoints diagram...</div>
+        </div>
+    </div>
+
+    <script>
+        // Function to load and inject SVG content directly into the DOM
+        async function loadSVG(url, containerId) {
+            const container = document.getElementById(containerId);
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const svgText = await response.text();
+                
+                // Parse the SVG and add responsive attributes
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.querySelector('svg');
+                
+                if (svgElement) {
+                    // Make SVG responsive
+                    const width = svgElement.getAttribute('width');
+                    const height = svgElement.getAttribute('height');
+                    
+                    if (width && height && !svgElement.getAttribute('viewBox')) {
+                        svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
+                    }
+                    
+                    // Set responsive dimensions
+                    svgElement.setAttribute('width', '100%');
+                    svgElement.setAttribute('height', 'auto');
+                    svgElement.style.maxWidth = '100%';
+                    svgElement.style.height = 'auto';
+                    
+                    // Clear container and insert SVG
+                    container.innerHTML = '';
+                    container.appendChild(svgElement);
+                    
+                    console.log(`✅ Successfully loaded: ${url}`);
+                } else {
+                    throw new Error('Invalid SVG content');
+                }
+                
+            } catch (error) {
+                console.error(`❌ Failed to load ${url}:`, error);
+                container.innerHTML = `<div class="error">Failed to load diagram: ${error.message}</div>`;
+            }
+        }
+        
+        // Load all SVG diagrams
+        const diagrams = [
+            { url: 'assets/diagrams/deployment_pipeline.svg', container: 'pipeline-container' },
+            { url: 'assets/diagrams/database_schema.svg', container: 'schema-container' },
+            { url: 'assets/diagrams/data_flow_diagram.svg', container: 'dataflow-container' },
+            { url: 'assets/diagrams/api_endpoints_diagram.svg', container: 'api-container' }
+        ];
+        
+        // Load diagrams with a small delay between each
+        diagrams.forEach((diagram, index) => {
+            setTimeout(() => {
+                loadSVG(diagram.url, diagram.container);
+            }, index * 200); // 200ms delay between loads
+        });
+    </script>
+</body>
+</html>

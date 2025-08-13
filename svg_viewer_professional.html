@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Intelligence Platform - Technical Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .diagram-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .diagram-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .diagram-header {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diagram-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            opacity: 0.3;
+        }
+
+        .diagram-header h2 {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .diagram-header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .diagram-content {
+            position: relative;
+            background: white;
+            min-height: 400px;
+        }
+
+        .svg-viewport {
+            width: 100%;
+            height: 500px;
+            overflow: auto;
+            border: none;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .svg-viewport::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .svg-viewport::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 6px;
+        }
+
+        .svg-viewport::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 6px;
+            border: 2px solid #f1f1f1;
+        }
+
+        .svg-viewport::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .svg-container {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100%;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn:hover {
+            background: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .fullscreen-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .fullscreen-svg {
+            max-width: 100%;
+            max-height: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-fullscreen {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .close-fullscreen:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px;
+            text-align: center;
+            border: 2px solid #ffcdd2;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .diagram-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HR Intelligence Platform</h1>
+        <p>Technical Architecture Documentation</p>
+    </div>
+
+    <div class="container">
+        <div class="diagram-grid">
+            <div class="diagram-card">
+                <div class="diagram-header">
+                    <h2>🔄 CI/CD Pipeline</h2>
+                    <p>Complete deployment workflow from development to production</p>
+                </div>
+                <div class="diagram-content">
+                    <div class="controls">
+                        <button class="control-btn" onclick="zoomIn('pipeline-svg')" title="Zoom In">🔍</button>
+                        <button class="control-btn" onclick="openFullscreen('pipeline-svg')" title="Fullscreen">⛶</button>
+                    </div>
+                    <div class="svg-viewport">
+                        <div id="pipeline-container" class="svg-container">
+                            <div class="loading">
+                                <div class="loading-spinner"></div>
+                                <p>Loading deployment pipeline...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="diagram-card">
+                <div class="diagram-header">
+                    <h2>🗄️ Database Schema</h2>
+                    <p>Complete data model with relationships and indexes</p>
+                </div>
+                <div class="diagram-content">
+                    <div class="controls">
+                        <button class="control-btn" onclick="zoomIn('schema-svg')" title="Zoom In">🔍</button>
+                        <button class="control-btn" onclick="openFullscreen('schema-svg')" title="Fullscreen">⛶</button>
+                    </div>
+                    <div class="svg-viewport">
+                        <div id="schema-container" class="svg-container">
+                            <div class="loading">
+                                <div class="loading-spinner"></div>
+                                <p>Loading database schema...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="diagram-card">
+                <div class="diagram-header">
+                    <h2>🔄 Data Flow</h2>
+                    <p>Information processing from input sources to insights</p>
+                </div>
+                <div class="diagram-content">
+                    <div class="controls">
+                        <button class="control-btn" onclick="zoomIn('dataflow-svg')" title="Zoom In">🔍</button>
+                        <button class="control-btn" onclick="openFullscreen('dataflow-svg')" title="Fullscreen">⛶</button>
+                    </div>
+                    <div class="svg-viewport">
+                        <div id="dataflow-container" class="svg-container">
+                            <div class="loading">
+                                <div class="loading-spinner"></div>
+                                <p>Loading data flow diagram...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="diagram-card">
+                <div class="diagram-header">
+                    <h2>🔗 API Architecture</h2>
+                    <p>Complete endpoint structure and service organization</p>
+                </div>
+                <div class="diagram-content">
+                    <div class="controls">
+                        <button class="control-btn" onclick="zoomIn('api-svg')" title="Zoom In">🔍</button>
+                        <button class="control-btn" onclick="openFullscreen('api-svg')" title="Fullscreen">⛶</button>
+                    </div>
+                    <div class="svg-viewport">
+                        <div id="api-container" class="svg-container">
+                            <div class="loading">
+                                <div class="loading-spinner"></div>
+                                <p>Loading API architecture...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>HR Intelligence Platform Technical Documentation • Interactive Architecture Diagrams</p>
+    </div>
+
+    <!-- Fullscreen Modal -->
+    <div id="fullscreen-modal" class="fullscreen-modal">
+        <div class="fullscreen-content">
+            <button class="close-fullscreen" onclick="closeFullscreen()">×</button>
+            <div id="fullscreen-svg-container" class="fullscreen-svg"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSvgs = {};
+        let zoomLevels = {};
+
+        async function loadSVG(url, containerId, svgId) {
+            const container = document.getElementById(containerId);
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const svgText = await response.text();
+                
+                // Parse and optimize SVG
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.querySelector('svg');
+                
+                if (svgElement) {
+                    // Get original dimensions
+                    const width = parseInt(svgElement.getAttribute('width')) || 1400;
+                    const height = parseInt(svgElement.getAttribute('height')) || 800;
+                    
+                    // Add viewBox if missing
+                    if (!svgElement.getAttribute('viewBox')) {
+                        svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
+                    }
+                    
+                    // Set responsive attributes
+                    svgElement.setAttribute('width', '100%');
+                    svgElement.setAttribute('height', 'auto');
+                    svgElement.setAttribute('id', svgId);
+                    svgElement.style.maxWidth = '100%';
+                    svgElement.style.display = 'block';
+                    svgElement.style.margin = '0 auto';
+                    
+                    // Store reference
+                    currentSvgs[svgId] = svgElement.cloneNode(true);
+                    zoomLevels[svgId] = 1;
+                    
+                    // Clear loading and insert SVG
+                    container.innerHTML = '';
+                    container.appendChild(svgElement);
+                    
+                    console.log(`✅ Successfully loaded: ${url}`);
+                } else {
+                    throw new Error('Invalid SVG content');
+                }
+                
+            } catch (error) {
+                console.error(`❌ Failed to load ${url}:`, error);
+                container.innerHTML = `<div class="error">
+                    <h3>Failed to load diagram</h3>
+                    <p>${error.message}</p>
+                    <p>Please check the file path and try again.</p>
+                </div>`;
+            }
+        }
+
+        function zoomIn(svgId) {
+            const svg = document.getElementById(svgId);
+            if (svg) {
+                zoomLevels[svgId] = Math.min(zoomLevels[svgId] + 0.25, 3);
+                svg.style.transform = `scale(${zoomLevels[svgId]})`;
+                svg.style.transformOrigin = 'center center';
+            }
+        }
+
+        function openFullscreen(svgId) {
+            const modal = document.getElementById('fullscreen-modal');
+            const container = document.getElementById('fullscreen-svg-container');
+            
+            if (currentSvgs[svgId]) {
+                const svgClone = currentSvgs[svgId].cloneNode(true);
+                svgClone.style.transform = 'none';
+                svgClone.style.width = '100%';
+                svgClone.style.height = 'auto';
+                svgClone.style.maxWidth = '95vw';
+                svgClone.style.maxHeight = '90vh';
+                
+                container.innerHTML = '';
+                container.appendChild(svgClone);
+                modal.style.display = 'block';
+                
+                // Prevent body scrolling
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeFullscreen() {
+            const modal = document.getElementById('fullscreen-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close fullscreen on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFullscreen();
+            }
+        });
+
+        // Close fullscreen on background click
+        document.getElementById('fullscreen-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFullscreen();
+            }
+        });
+
+        // Load all diagrams
+        const diagrams = [
+            { url: 'assets/diagrams/deployment_pipeline.svg', container: 'pipeline-container', id: 'pipeline-svg' },
+            { url: 'assets/diagrams/database_schema.svg', container: 'schema-container', id: 'schema-svg' },
+            { url: 'assets/diagrams/data_flow_diagram.svg', container: 'dataflow-container', id: 'dataflow-svg' },
+            { url: 'assets/diagrams/api_endpoints_diagram.svg', container: 'api-container', id: 'api-svg' }
+        ];
+        
+        // Load with staggered timing
+        diagrams.forEach((diagram, index) => {
+            setTimeout(() => {
+                loadSVG(diagram.url, diagram.container, diagram.id);
+            }, index * 300);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple SVG Test</title>
+    <style>
+        body { padding: 20px; font-family: Arial, sans-serif; }
+        .test { margin: 20px 0; border: 1px solid #ccc; padding: 10px; }
+        img { max-width: 600px; height: auto; border: 1px solid red; }
+    </style>
+</head>
+<body>
+    <h1>Simple SVG Display Test</h1>
+    
+    <div class="test">
+        <h3>Deployment Pipeline SVG:</h3>
+        <img src="assets/diagrams/deployment_pipeline.svg" alt="Deployment Pipeline">
+        <p id="result1">Loading...</p>
+    </div>
+    
+    <div class="test">
+        <h3>Database Schema SVG:</h3>
+        <img src="assets/diagrams/database_schema.svg" alt="Database Schema">
+        <p id="result2">Loading...</p>
+    </div>
+
+    <script>
+        const imgs = document.querySelectorAll('img');
+        imgs[0].onload = () => document.getElementById('result1').textContent = '✓ Loaded successfully';
+        imgs[0].onerror = () => document.getElementById('result1').textContent = '✗ Failed to load - check file path';
+        
+        imgs[1].onload = () => document.getElementById('result2').textContent = '✓ Loaded successfully';
+        imgs[1].onerror = () => document.getElementById('result2').textContent = '✗ Failed to load - check file path';
+    </script>
+</body>
+</html>
