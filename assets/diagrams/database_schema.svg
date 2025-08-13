@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="1200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #1F2937; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #374151; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #6B7280; }
+      .table-name { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #FFFFFF; }
+      .field-name { font-family: Arial, sans-serif; font-size: 11px; fill: #FFFFFF; }
+      .field-type { font-family: Arial, sans-serif; font-size: 10px; fill: #E5E7EB; }
+      .pk { fill: #F59E0B; }
+      .fk { fill: #3B82F6; }
+      .index { fill: #10B981; }
+      .arrow { stroke: #6B7280; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1400" height="1200" fill="#F9FAFB"/>
+  
+  <!-- Title -->
+  <text x="700" y="40" text-anchor="middle" class="title">HR Intelligence Platform - Database Schema</text>
+  
+  <!-- Organizations Table -->
+  <rect x="50" y="80" width="300" height="200" fill="#3B82F6" stroke="#1D4ED8" stroke-width="2" rx="6"/>
+  <text x="200" y="105" text-anchor="middle" class="table-name">organizations</text>
+  <rect x="60" y="120" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="70" y="133" class="field-name">id (UUID) - PK</text>
+  <rect x="60" y="150" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="163" class="field-name">name (VARCHAR)</text>
+  <rect x="60" y="180" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="193" class="field-name">industry (VARCHAR)</text>
+  <rect x="60" y="210" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="223" class="field-name">size (INTEGER)</text>
+  <rect x="60" y="240" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="253" class="field-name">created_at (TIMESTAMP)</text>
+  <rect x="60" y="270" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="283" class="field-name">updated_at (TIMESTAMP)</text>
+  
+  <!-- Locations Table -->
+  <rect x="400" y="80" width="300" height="180" fill="#8B5CF6" stroke="#6D28D9" stroke-width="2" rx="6"/>
+  <text x="550" y="105" text-anchor="middle" class="table-name">locations</text>
+  <rect x="410" y="120" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="420" y="133" class="field-name">id (UUID) - PK</text>
+  <rect x="410" y="150" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="420" y="163" class="field-name">organization_id (UUID) - FK</text>
+  <rect x="410" y="180" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="193" class="field-name">name (VARCHAR)</text>
+  <rect x="410" y="210" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="223" class="field-name">address (TEXT)</text>
+  <rect x="410" y="240" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="253" class="field-name">created_at (TIMESTAMP)</text>
+  
+  <!-- Employees Table -->
+  <rect x="750" y="80" width="300" height="220" fill="#10B981" stroke="#059669" stroke-width="2" rx="6"/>
+  <text x="900" y="105" text-anchor="middle" class="table-name">employees</text>
+  <rect x="760" y="120" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="770" y="133" class="field-name">id (UUID) - PK</text>
+  <rect x="760" y="150" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="770" y="163" class="field-name">organization_id (UUID) - FK</text>
+  <rect x="760" y="180" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="770" y="193" class="field-name">location_id (UUID) - FK</text>
+  <rect x="760" y="210" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="770" y="223" class="field-name">manager_id (UUID) - FK</text>
+  <rect x="760" y="240" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="253" class="field-name">external_id (VARCHAR)</text>
+  <rect x="760" y="270" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="283" class="field-name">first_name (VARCHAR)</text>
+  <rect x="760" y="300" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="313" class="field-name">last_name (VARCHAR)</text>
+  <rect x="760" y="330" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="343" class="field-name">email (VARCHAR)</text>
+  <rect x="760" y="360" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="373" class="field-name">role (VARCHAR)</text>
+  <rect x="760" y="390" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="403" class="field-name">hire_date (DATE)</text>
+  <rect x="760" y="420" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="433" class="field-name">status (VARCHAR)</text>
+  <rect x="760" y="450" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="463" class="field-name">created_at (TIMESTAMP)</text>
+  <rect x="760" y="480" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="493" class="field-name">updated_at (TIMESTAMP)</text>
+  
+  <!-- Assessments Table -->
+  <rect x="1100" y="80" width="300" height="200" fill="#F59E0B" stroke="#D97706" stroke-width="2" rx="6"/>
+  <text x="1250" y="105" text-anchor="middle" class="table-name">assessments</text>
+  <rect x="1110" y="120" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="1120" y="133" class="field-name">id (UUID) - PK</text>
+  <rect x="1110" y="150" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="1120" y="163" class="field-name">employee_id (UUID) - FK</text>
+  <rect x="1110" y="180" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="193" class="field-name">assessment_type (VARCHAR)</text>
+  <rect x="1110" y="210" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="223" class="field-name">data (JSONB)</text>
+  <rect x="1110" y="240" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="253" class="field-name">predictions (JSONB)</text>
+  <rect x="1110" y="270" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="283" class="field-name">confidence_interval (JSONB)</text>
+  <rect x="1110" y="300" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="313" class="field-name">data_quality_score (INTEGER)</text>
+  <rect x="1110" y="330" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="343" class="field-name">created_at (TIMESTAMP)</text>
+  <rect x="1110" y="360" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="373" class="field-name">processed_at (TIMESTAMP)</text>
+  
+  <!-- Programs Table -->
+  <rect x="50" y="320" width="300" height="200" fill="#0891B2" stroke="#0E7490" stroke-width="2" rx="6"/>
+  <text x="200" y="345" text-anchor="middle" class="table-name">programs</text>
+  <rect x="60" y="360" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="70" y="373" class="field-name">id (UUID) - PK</text>
+  <rect x="60" y="390" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="70" y="403" class="field-name">organization_id (UUID) - FK</text>
+  <rect x="60" y="420" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="433" class="field-name">name (VARCHAR)</text>
+  <rect x="60" y="450" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="463" class="field-name">from_role (VARCHAR)</text>
+  <rect x="60" y="480" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="493" class="field-name">to_role (VARCHAR)</text>
+  <rect x="60" y="510" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="523" class="field-name">duration_weeks (INTEGER)</text>
+  <rect x="60" y="540" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="553" class="field-name">cost_per_employee (DECIMAL)</text>
+  <rect x="60" y="570" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="583" class="field-name">max_participants (INTEGER)</text>
+  <rect x="60" y="600" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="613" class="field-name">requirements (JSONB)</text>
+  <rect x="60" y="630" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="643" class="field-name">modules (JSONB)</text>
+  <rect x="60" y="660" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="673" class="field-name">created_at (TIMESTAMP)</text>
+  
+  <!-- Program Enrollments Table -->
+  <rect x="400" y="320" width="300" height="200" fill="#7C3AED" stroke="#5B21B6" stroke-width="2" rx="6"/>
+  <text x="550" y="345" text-anchor="middle" class="table-name">program_enrollments</text>
+  <rect x="410" y="360" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="420" y="373" class="field-name">id (UUID) - PK</text>
+  <rect x="410" y="390" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="420" y="403" class="field-name">program_id (UUID) - FK</text>
+  <rect x="410" y="420" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="420" y="433" class="field-name">employee_id (UUID) - FK</text>
+  <rect x="410" y="450" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="463" class="field-name">enrollment_date (DATE)</text>
+  <rect x="410" y="480" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="493" class="field-name">expected_completion_date (DATE)</text>
+  <rect x="410" y="510" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="523" class="field-name">actual_completion_date (DATE)</text>
+  <rect x="410" y="540" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="553" class="field-name">status (VARCHAR)</text>
+  <rect x="410" y="570" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="583" class="field-name">progress_percentage (INTEGER)</text>
+  <rect x="410" y="600" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="613" class="field-name">created_at (TIMESTAMP)</text>
+  
+  <!-- Analytics Events Table -->
+  <rect x="750" y="320" width="300" height="180" fill="#BE185D" stroke="#9D174D" stroke-width="2" rx="6"/>
+  <text x="900" y="345" text-anchor="middle" class="table-name">analytics_events</text>
+  <rect x="760" y="360" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="770" y="373" class="field-name">id (UUID) - PK</text>
+  <rect x="760" y="390" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="770" y="403" class="field-name">organization_id (UUID) - FK</text>
+  <rect x="760" y="420" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="433" class="field-name">event_type (VARCHAR)</text>
+  <rect x="760" y="450" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="463" class="field-name">event_data (JSONB)</text>
+  <rect x="760" y="480" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="770" y="493" class="field-name">user_id (UUID) - FK</text>
+  <rect x="760" y="510" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="523" class="field-name">timestamp (TIMESTAMP)</text>
+  
+  <!-- Alerts Table -->
+  <rect x="1100" y="320" width="300" height="180" fill="#EF4444" stroke="#DC2626" stroke-width="2" rx="6"/>
+  <text x="1250" y="345" text-anchor="middle" class="table-name">alerts</text>
+  <rect x="1110" y="360" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="1120" y="373" class="field-name">id (UUID) - PK</text>
+  <rect x="1110" y="390" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="1120" y="403" class="field-name">organization_id (UUID) - FK</text>
+  <rect x="1110" y="420" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="433" class="field-name">alert_type (VARCHAR)</text>
+  <rect x="1110" y="450" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="463" class="field-name">priority (VARCHAR)</text>
+  <rect x="1110" y="480" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="493" class="field-name">message (TEXT)</text>
+  <rect x="1110" y="510" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="523" class="field-name">created_at (TIMESTAMP)</text>
+  
+  <!-- Users Table -->
+  <rect x="50" y="560" width="300" height="180" fill="#6B7280" stroke="#4B5563" stroke-width="2" rx="6"/>
+  <text x="200" y="585" text-anchor="middle" class="table-name">users</text>
+  <rect x="60" y="600" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="70" y="613" class="field-name">id (UUID) - PK</text>
+  <rect x="60" y="630" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="70" y="643" class="field-name">organization_id (UUID) - FK</text>
+  <rect x="60" y="660" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="673" class="field-name">email (VARCHAR)</text>
+  <rect x="60" y="690" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="703" class="field-name">password_hash (VARCHAR)</text>
+  <rect x="60" y="720" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="733" class="field-name">role (VARCHAR)</text>
+  <rect x="60" y="750" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="763" class="field-name">permissions (JSONB)</text>
+  <rect x="60" y="780" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="70" y="793" class="field-name">created_at (TIMESTAMP)</text>
+  
+  <!-- Audit Logs Table -->
+  <rect x="400" y="560" width="300" height="180" fill="#059669" stroke="#047857" stroke-width="2" rx="6"/>
+  <text x="550" y="585" text-anchor="middle" class="table-name">audit_logs</text>
+  <rect x="410" y="600" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="420" y="613" class="field-name">id (UUID) - PK</text>
+  <rect x="410" y="630" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="420" y="643" class="field-name">user_id (UUID) - FK</text>
+  <rect x="410" y="660" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="673" class="field-name">action (VARCHAR)</text>
+  <rect x="410" y="690" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="703" class="field-name">resource (VARCHAR)</text>
+  <rect x="410" y="720" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="733" class="field-name">ip_address (INET)</text>
+  <rect x="410" y="750" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="763" class="field-name">user_agent (TEXT)</text>
+  <rect x="410" y="780" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="420" y="793" class="field-name">timestamp (TIMESTAMP)</text>
+  
+  <!-- Integrations Table -->
+  <rect x="750" y="560" width="300" height="180" fill="#8B5CF6" stroke="#6D28D9" stroke-width="2" rx="6"/>
+  <text x="900" y="585" text-anchor="middle" class="table-name">integrations</text>
+  <rect x="760" y="600" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="770" y="613" class="field-name">id (UUID) - PK</text>
+  <rect x="760" y="630" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="770" y="643" class="field-name">organization_id (UUID) - FK</text>
+  <rect x="760" y="660" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="673" class="field-name">provider (VARCHAR)</text>
+  <rect x="760" y="690" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="703" class="field-name">config (JSONB)</text>
+  <rect x="760" y="720" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="733" class="field-name">status (VARCHAR)</text>
+  <rect x="760" y="750" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="763" class="field-name">last_sync (TIMESTAMP)</text>
+  <rect x="760" y="780" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="770" y="793" class="field-name">created_at (TIMESTAMP)</text>
+  
+  <!-- Webhooks Table -->
+  <rect x="1100" y="560" width="300" height="180" fill="#F59E0B" stroke="#D97706" stroke-width="2" rx="6"/>
+  <text x="1250" y="585" text-anchor="middle" class="table-name">webhooks</text>
+  <rect x="1110" y="600" width="280" height="20" fill="#F59E0B" rx="2"/>
+  <text x="1120" y="613" class="field-name">id (UUID) - PK</text>
+  <rect x="1110" y="630" width="280" height="20" fill="#3B82F6" rx="2"/>
+  <text x="1120" y="643" class="field-name">organization_id (UUID) - FK</text>
+  <rect x="1110" y="660" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="673" class="field-name">url (VARCHAR)</text>
+  <rect x="1110" y="690" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="703" class="field-name">events (JSONB)</text>
+  <rect x="1110" y="720" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="733" class="field-name">secret (VARCHAR)</text>
+  <rect x="1110" y="750" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="763" class="field-name">status (VARCHAR)</text>
+  <rect x="1110" y="780" width="280" height="20" fill="#6B7280" rx="2"/>
+  <text x="1120" y="793" class="field-name">created_at (TIMESTAMP)</text>
+  
+  <!-- Relationship Arrows -->
+  <!-- Organizations to Locations -->
+  <line x1="200" y1="280" x2="400" y2="280" class="arrow"/>
+  <text x="300" y="270" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Organizations to Employees -->
+  <line x1="200" y1="300" x2="750" y2="300" class="arrow"/>
+  <text x="475" y="290" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Locations to Employees -->
+  <line x1="550" y1="300" x2="750" y2="300" class="arrow"/>
+  <text x="650" y="290" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Employees to Employees (Manager) -->
+  <line x1="900" y1="300" x2="900" y2="320" class="arrow"/>
+  <text x="920" y="310" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Employees to Assessments -->
+  <line x1="900" y1="300" x2="1100" y2="300" class="arrow"/>
+  <text x="1000" y="290" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Organizations to Programs -->
+  <line x1="200" y1="520" x2="200" y2="540" class="arrow"/>
+  <text x="220" y="530" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Programs to Enrollments -->
+  <line x1="200" y1="520" x2="400" y2="520" class="arrow"/>
+  <text x="300" y="510" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Employees to Enrollments -->
+  <line x1="900" y1="520" x2="400" y2="520" class="arrow"/>
+  <text x="650" y="510" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Organizations to Analytics -->
+  <line x1="200" y1="520" x2="900" y2="520" class="arrow"/>
+  <text x="550" y="510" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Organizations to Alerts -->
+  <line x1="200" y1="520" x2="1100" y2="520" class="arrow"/>
+  <text x="650" y="510" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Organizations to Users -->
+  <line x1="200" y1="740" x2="200" y2="760" class="arrow"/>
+  <text x="220" y="750" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Users to Audit Logs -->
+  <line x1="200" y1="740" x2="400" y2="740" class="arrow"/>
+  <text x="300" y="730" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Organizations to Integrations -->
+  <line x1="200" y1="740" x2="900" y2="740" class="arrow"/>
+  <text x="550" y="730" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Organizations to Webhooks -->
+  <line x1="200" y1="740" x2="1100" y2="740" class="arrow"/>
+  <text x="650" y="730" text-anchor="middle" class="label">1:N</text>
+  
+  <!-- Indexes -->
+  <rect x="50" y="800" width="1300" height="300" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1" rx="4"/>
+  <text x="700" y="820" text-anchor="middle" class="subtitle">Key Indexes & Performance Optimizations</text>
+  
+  <text x="100" y="850" class="label">• employees(organization_id, status) - Composite index for filtering</text>
+  <text x="100" y="870" class="label">• employees(location_id) - Foreign key index</text>
+  <text x="100" y="890" class="label">• employees(manager_id) - Self-referencing foreign key</text>
+  <text x="100" y="910" class="label">• assessments(employee_id, created_at) - Time-based queries</text>
+  <text x="100" y="930" class="label">• program_enrollments(program_id, status) - Program tracking</text>
+  <text x="100" y="950" class="label">• analytics_events(organization_id, timestamp) - Time-series data</text>
+  <text x="100" y="970" class="label">• audit_logs(user_id, timestamp) - Security monitoring</text>
+  <text x="100" y="990" class="label">• users(email) - Unique constraint for authentication</text>
+  <text x="100" y="1010" class="label">• integrations(organization_id, provider) - Integration management</text>
+  
+  <text x="700" y="850" class="label">• JSONB GIN indexes on data, predictions, requirements fields</text>
+  <text x="700" y="870" class="label">• Partial indexes for active records (status = 'active')</text>
+  <text x="700" y="890" class="label">• Expression indexes for date range queries</text>
+  <text x="700" y="910" class="label">• Full-text search on employee names and roles</text>
+  <text x="700" y="930" class="label">• Partitioning by organization_id for large datasets</text>
+  <text x="700" y="950" class="label">• Materialized views for complex analytics queries</text>
+  <text x="700" y="970" class="label">• Connection pooling for high concurrency</text>
+  <text x="700" y="990" class="label">• Read replicas for analytics workloads</text>
+  <text x="700" y="1010" class="label">• Automated vacuum and analyze maintenance</text>
+  
+  <!-- Legend -->
+  <rect x="50" y="1140" width="1300" height="50" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1" rx="4"/>
+  <text x="700" y="1160" text-anchor="middle" class="subtitle">Database Schema Legend</text>
+  
+  <rect x="80" y="1145" width="20" height="10" fill="#F59E0B"/>
+  <text x="110" y="1155" class="label">Primary Key</text>
+  
+  <rect x="200" y="1145" width="20" height="10" fill="#3B82F6"/>
+  <text x="230" y="1155" class="label">Foreign Key</text>
+  
+  <rect x="350" y="1145" width="20" height="10" fill="#10B981"/>
+  <text x="380" y="1155" class="label">Index</text>
+  
+  <rect x="500" y="1145" width="20" height="10" fill="#6B7280"/>
+  <text x="530" y="1155" class="label">Regular Field</text>
+  
+  <rect x="650" y="1145" width="20" height="10" fill="#8B5CF6"/>
+  <text x="680" y="1155" class="label">JSONB Field</text>
+  
+  <rect x="800" y="1145" width="20" height="10" fill="#EF4444"/>
+  <text x="830" y="1155" class="label">Audit/Security</text>
+  
+  <rect x="950" y="1145" width="20" height="10" fill="#F59E0B"/>
+  <text x="980" y="1155" class="label">Integration</text>
+  
+  <rect x="1100" y="1145" width="20" height="10" fill="#059669"/>
+  <text x="1130" y="1155" class="label">Analytics</text>
+</svg>

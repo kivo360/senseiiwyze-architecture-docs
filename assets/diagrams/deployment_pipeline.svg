@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #1F2937; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #374151; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #6B7280; }
+      .step { font-family: Arial, sans-serif; font-size: 11px; fill: #FFFFFF; }
+      .arrow { stroke: #3B82F6; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .success { stroke: #10B981; stroke-width: 3; fill: none; marker-end: url(#success-arrow); }
+      .failure { stroke: #EF4444; stroke-width: 3; fill: none; marker-end: url(#failure-arrow); }
+      .manual { stroke: #F59E0B; stroke-width: 3; fill: none; marker-end: url(#manual-arrow); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6"/>
+    </marker>
+    <marker id="success-arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10B981"/>
+    </marker>
+    <marker id="failure-arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#EF4444"/>
+    </marker>
+    <marker id="manual-arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#F59E0B"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1400" height="800" fill="#F9FAFB"/>
+  
+  <!-- Title -->
+  <text x="700" y="40" text-anchor="middle" class="title">HR Intelligence Platform - CI/CD Deployment Pipeline</text>
+  
+  <!-- Development Phase -->
+  <rect x="50" y="80" width="1300" height="150" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2" rx="8"/>
+  <text x="700" y="105" text-anchor="middle" class="subtitle">Development Phase</text>
+  
+  <!-- Code Commit -->
+  <rect x="80" y="120" width="150" height="80" fill="#3B82F6" stroke="#1D4ED8" stroke-width="2" rx="6"/>
+  <text x="155" y="145" text-anchor="middle" class="step">Code Commit</text>
+  <text x="155" y="160" text-anchor="middle" class="step">GitHub/GitLab</text>
+  <text x="155" y="175" text-anchor="middle" class="label">Feature branch</text>
+  <text x="155" y="190" text-anchor="middle" class="label">Pull request</text>
+  
+  <!-- Code Review -->
+  <rect x="250" y="120" width="150" height="80" fill="#8B5CF6" stroke="#6D28D9" stroke-width="2" rx="6"/>
+  <text x="325" y="145" text-anchor="middle" class="step">Code Review</text>
+  <text x="325" y="160" text-anchor="middle" class="step">Peer Review</text>
+  <text x="325" y="175" text-anchor="middle" class="label">Automated checks</text>
+  <text x="325" y="190" text-anchor="middle" class="label">Manual review</text>
+  
+  <!-- Merge to Main -->
+  <rect x="420" y="120" width="150" height="80" fill="#10B981" stroke="#059669" stroke-width="2" rx="6"/>
+  <text x="495" y="145" text-anchor="middle" class="step">Merge to Main</text>
+  <text x="495" y="160" text-anchor="middle" class="step">Main Branch</text>
+  <text x="495" y="175" text-anchor="middle" class="label">Squash merge</text>
+  <text x="495" y="190" text-anchor="middle" class="label">Version bump</text>
+  
+  <!-- Testing Phase -->
+  <rect x="50" y="270" width="1300" height="150" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" rx="8"/>
+  <text x="700" y="295" text-anchor="middle" class="subtitle">Testing Phase</text>
+  
+  <!-- Unit Tests -->
+  <rect x="80" y="310" width="150" height="80" fill="#10B981" stroke="#059669" stroke-width="2" rx="6"/>
+  <text x="155" y="335" text-anchor="middle" class="step">Unit Tests</text>
+  <text x="155" y="350" text-anchor="middle" class="step">Jest/Pytest</text>
+  <text x="155" y="365" text-anchor="middle" class="label">Component tests</text>
+  <text x="155" y="380" text-anchor="middle" class="label">Function tests</text>
+  
+  <!-- Integration Tests -->
+  <rect x="250" y="310" width="150" height="80" fill="#8B5CF6" stroke="#6D28D9" stroke-width="2" rx="6"/>
+  <text x="325" y="335" text-anchor="middle" class="step">Integration Tests</text>
+  <text x="325" y="350" text-anchor="middle" class="step">API Tests</text>
+  <text x="325" y="365" text-anchor="middle" class="label">End-to-end</text>
+  <text x="325" y="380" text-anchor="middle" class="label">Database tests</text>
+  
+  <!-- Security Scan -->
+  <rect x="420" y="310" width="150" height="80" fill="#EF4444" stroke="#DC2626" stroke-width="2" rx="6"/>
+  <text x="495" y="335" text-anchor="middle" class="step">Security Scan</text>
+  <text x="495" y="350" text-anchor="middle" class="step">Snyk/Bandit</text>
+  <text x="495" y="365" text-anchor="middle" class="label">Vulnerability scan</text>
+  <text x="495" y="380" text-anchor="middle" class="label">Dependency check</text>
+  
+  <!-- Build & Package -->
+  <rect x="590" y="310" width="150" height="80" fill="#F59E0B" stroke="#D97706" stroke-width="2" rx="6"/>
+  <text x="665" y="335" text-anchor="middle" class="step">Build & Package</text>
+  <text x="665" y="350" text-anchor="middle" class="step">Docker</text>
+  <text x="665" y="365" text-anchor="middle" class="label">Multi-stage build</text>
+  <text x="665" y="380" text-anchor="middle" class="label">Optimized images</text>
+  
+  <!-- Staging Deployment -->
+  <rect x="760" y="310" width="150" height="80" fill="#0891B2" stroke="#0E7490" stroke-width="2" rx="6"/>
+  <text x="835" y="335" text-anchor="middle" class="step">Staging Deploy</text>
+  <text x="835" y="350" text-anchor="middle" class="step">ECS Staging</text>
+  <text x="835" y="365" text-anchor="middle" class="label">Auto deployment</text>
+  <text x="835" y="380" text-anchor="middle" class="label">Health checks</text>
+  
+  <!-- Integration Tests -->
+  <rect x="930" y="310" width="150" height="80" fill="#7C3AED" stroke="#5B21B6" stroke-width="2" rx="6"/>
+  <text x="1005" y="335" text-anchor="middle" class="step">Integration Tests</text>
+  <text x="1005" y="350" text-anchor="middle" class="step">Staging Tests</text>
+  <text x="1005" y="365" text-anchor="middle" class="label">Full environment</text>
+  <text x="1005" y="380" text-anchor="middle" class="label">Performance tests</text>
+  
+  <!-- Production Phase -->
+  <rect x="50" y="460" width="1300" height="150" fill="#D1FAE5" stroke="#10B981" stroke-width="2" rx="8"/>
+  <text x="700" y="485" text-anchor="middle" class="subtitle">Production Deployment</text>
+  
+  <!-- Manual Approval -->
+  <rect x="80" y="500" width="150" height="80" fill="#F59E0B" stroke="#D97706" stroke-width="2" rx="6"/>
+  <text x="155" y="525" text-anchor="middle" class="step">Manual Approval</text>
+  <text x="155" y="540" text-anchor="middle" class="step">Release Manager</text>
+  <text x="155" y="555" text-anchor="middle" class="label">Review staging</text>
+  <text x="155" y="570" text-anchor="middle" class="label">Approve deployment</text>
+  
+  <!-- Production Deploy -->
+  <rect x="250" y="500" width="150" height="80" fill="#EF4444" stroke="#DC2626" stroke-width="2" rx="6"/>
+  <text x="325" y="525" text-anchor="middle" class="step">Production Deploy</text>
+  <text x="325" y="540" text-anchor="middle" class="step">ECS Production</text>
+  <text x="325" y="555" text-anchor="middle" class="label">Blue-green deploy</text>
+  <text x="325" y="570" text-anchor="middle" class="label">Rollback ready</text>
+  
+  <!-- Health Checks -->
+  <rect x="420" y="500" width="150" height="80" fill="#10B981" stroke="#059669" stroke-width="2" rx="6"/>
+  <text x="495" y="525" text-anchor="middle" class="step">Health Checks</text>
+  <text x="495" y="540" text-anchor="middle" class="step">Monitoring</text>
+  <text x="495" y="555" text-anchor="middle" class="label">API endpoints</text>
+  <text x="495" y="570" text-anchor="middle" class="label">Database connectivity</text>
+  
+  <!-- Smoke Tests -->
+  <rect x="590" y="500" width="150" height="80" fill="#8B5CF6" stroke="#6D28D9" stroke-width="2" rx="6"/>
+  <text x="665" y="525" text-anchor="middle" class="step">Smoke Tests</text>
+  <text x="665" y="540" text-anchor="middle" class="step">Critical Paths</text>
+  <text x="665" y="555" text-anchor="middle" class="label">User workflows</text>
+  <text x="665" y="570" text-anchor="middle" class="label">Core functionality</text>
+  
+  <!-- Monitoring -->
+  <rect x="760" y="500" width="150" height="80" fill="#0891B2" stroke="#0E7490" stroke-width="2" rx="6"/>
+  <text x="835" y="525" text-anchor="middle" class="step">Monitoring</text>
+  <text x="835" y="540" text-anchor="middle" class="step">DataDog</text>
+  <text x="835" y="555" text-anchor="middle" class="label">Performance metrics</text>
+  <text x="835" y="570" text-anchor="middle" class="label">Error tracking</text>
+  
+  <!-- Rollback -->
+  <rect x="930" y="500" width="150" height="80" fill="#6B7280" stroke="#4B5563" stroke-width="2" rx="6"/>
+  <text x="1005" y="525" text-anchor="middle" class="step">Rollback</text>
+  <text x="1005" y="540" text-anchor="middle" class="step">If Needed</text>
+  <text x="1005" y="555" text-anchor="middle" class="label">Previous version</text>
+  <text x="1005" y="570" text-anchor="middle" class="label">Database migration</text>
+  
+  <!-- Arrows - Development Flow -->
+  <line x1="230" y1="160" x2="250" y2="160" class="arrow"/>
+  <line x1="400" y1="160" x2="420" y2="160" class="arrow"/>
+  
+  <!-- Arrows - Testing Flow -->
+  <line x1="230" y1="350" x2="250" y2="350" class="arrow"/>
+  <line x1="400" y1="350" x2="420" y2="350" class="arrow"/>
+  <line x1="570" y1="350" x2="590" y2="350" class="arrow"/>
+  <line x1="740" y1="350" x2="760" y2="350" class="arrow"/>
+  <line x1="910" y1="350" x2="930" y2="350" class="arrow"/>
+  
+  <!-- Arrows - Production Flow -->
+  <line x1="230" y1="540" x2="250" y2="540" class="arrow"/>
+  <line x1="400" y1="540" x2="420" y2="540" class="arrow"/>
+  <line x1="570" y1="540" x2="590" y2="540" class="arrow"/>
+  <line x1="740" y1="540" x2="760" y2="540" class="arrow"/>
+  <line x1="910" y1="540" x2="930" y2="540" class="arrow"/>
+  
+  <!-- Manual Approval Arrow -->
+  <line x1="155" y1="580" x2="155" y2="600" class="manual"/>
+  <line x1="155" y1="600" x2="250" y2="600" class="manual"/>
+  <line x1="250" y1="600" x2="250" y2="580" class="manual"/>
+  
+  <!-- Failure Rollback Arrows -->
+  <line x1="325" y1="580" x2="325" y2="600" class="failure"/>
+  <line x1="325" y1="600" x2="1005" y2="600" class="failure"/>
+  <line x1="1005" y1="600" x2="1005" y2="580" class="failure"/>
+  
+  <!-- Success Flow -->
+  <line x1="495" y1="580" x2="495" y2="600" class="success"/>
+  <line x1="495" y1="600" x2="590" y2="600" class="success"/>
+  <line x1="590" y1="600" x2="590" y2="580" class="success"/>
+  
+  <!-- Time Indicators -->
+  <text x="155" y="210" text-anchor="middle" class="label" fill="#3B82F6">~5 min</text>
+  <text x="325" y="210" text-anchor="middle" class="label" fill="#8B5CF6">~10 min</text>
+  <text x="495" y="210" text-anchor="middle" class="label" fill="#10B981">~2 min</text>
+  
+  <text x="155" y="400" text-anchor="middle" class="label" fill="#10B981">~3 min</text>
+  <text x="325" y="400" text-anchor="middle" class="label" fill="#8B5CF6">~5 min</text>
+  <text x="495" y="400" text-anchor="middle" class="label" fill="#EF4444">~2 min</text>
+  <text x="665" y="400" text-anchor="middle" class="label" fill="#F59E0B">~5 min</text>
+  <text x="835" y="400" text-anchor="middle" class="label" fill="#0891B2">~2 min</text>
+  <text x="1005" y="400" text-anchor="middle" class="label" fill="#7C3AED">~8 min</text>
+  
+  <text x="155" y="590" text-anchor="middle" class="label" fill="#F59E0B">Manual</text>
+  <text x="325" y="590" text-anchor="middle" class="label" fill="#EF4444">~3 min</text>
+  <text x="495" y="590" text-anchor="middle" class="label" fill="#10B981">~2 min</text>
+  <text x="665" y="590" text-anchor="middle" class="label" fill="#8B5CF6">~5 min</text>
+  <text x="835" y="590" text-anchor="middle" class="label" fill="#0891B2">~2 min</text>
+  <text x="1005" y="590" text-anchor="middle" class="label" fill="#6B7280">~5 min</text>
+  
+  <!-- Environment Details -->
+  <rect x="50" y="650" width="1300" height="120" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1" rx="4"/>
+  <text x="700" y="670" text-anchor="middle" class="subtitle">Environment Configuration</text>
+  
+  <text x="100" y="700" class="label">• Staging: t3.medium instances, single AZ, test data</text>
+  <text x="100" y="720" class="label">• Production: t3.large instances, multi-AZ, real data</text>
+  <text x="100" y="740" class="label">• Database: RDS with read replicas, automated backups</text>
+  <text x="100" y="760" class="label">• Cache: ElastiCache Redis cluster, session storage</text>
+  
+  <text x="700" y="700" class="label">• Load Balancer: ALB with SSL termination, health checks</text>
+  <text x="700" y="720" class="label">• Monitoring: DataDog APM, CloudWatch metrics, Sentry errors</text>
+  <text x="700" y="740" class="label">• Security: VPC isolation, security groups, IAM roles</text>
+  <text x="700" y="760" class="label">• Backup: Automated daily backups, point-in-time recovery</text>
+  
+  <!-- Legend -->
+  <rect x="50" y="800" width="1300" height="30" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1" rx="4"/>
+  <text x="700" y="820" text-anchor="middle" class="subtitle">Pipeline Legend</text>
+  
+  <line x1="80" y1="810" x2="120" y2="810" class="arrow"/>
+  <text x="130" y="815" class="label">Automatic Flow</text>
+  
+  <line x1="300" y1="810" x2="340" y2="810" class="success"/>
+  <text x="350" y="815" class="label">Success Path</text>
+  
+  <line x1="500" y1="810" x2="540" y2="810" class="failure"/>
+  <text x="550" y="815" class="label">Failure/Rollback</text>
+  
+  <line x1="700" y1="810" x2="740" y2="810" class="manual"/>
+  <text x="750" y="815" class="label">Manual Approval</text>
+  
+  <rect x="900" y="805" width="20" height="10" fill="#3B82F6"/>
+  <text x="930" y="815" class="label">Development</text>
+  
+  <rect x="1050" y="805" width="20" height="10" fill="#F59E0B"/>
+  <text x="1080" y="815" class="label">Testing</text>
+  
+  <rect x="1200" y="805" width="20" height="10" fill="#10B981"/>
+  <text x="1230" y="815" class="label">Production</text>
+</svg>

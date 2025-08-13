@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .icon { fill: #8B5CF6; }
+      .book { fill: #FFFFFF; }
+    </style>
+  </defs>
+  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#8B5CF6" stroke-width="2" fill="none"/>
+  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" class="icon"/>
+  <path d="M9 6h6M9 10h6M9 14h4" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+</svg>

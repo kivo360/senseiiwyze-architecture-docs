@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #1F2937; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #374151; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #6B7280; }
+      .component { font-family: Arial, sans-serif; font-size: 11px; fill: #FFFFFF; }
+      .arrow { stroke: #6B7280; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .data-flow { stroke: #3B82F6; stroke-width: 3; fill: none; marker-end: url(#data-arrow); }
+      .api-flow { stroke: #10B981; stroke-width: 2; fill: none; marker-end: url(#api-arrow); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6B7280"/>
+    </marker>
+    <marker id="data-arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6"/>
+    </marker>
+    <marker id="api-arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10B981"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#F9FAFB"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" class="title">HR Intelligence Platform - System Architecture</text>
+  
+  <!-- Client Layer -->
+  <rect x="50" y="80" width="1100" height="120" fill="#E5E7EB" stroke="#D1D5DB" stroke-width="2" rx="8"/>
+  <text x="600" y="105" text-anchor="middle" class="subtitle">Client Layer</text>
+  
+  <!-- Web Dashboard -->
+  <rect x="80" y="120" width="120" height="60" fill="#3B82F6" stroke="#1D4ED8" stroke-width="2" rx="6"/>
+  <text x="140" y="150" text-anchor="middle" class="component">Web Dashboard</text>
+  <text x="140" y="165" text-anchor="middle" class="label">React.js</text>
+  
+  <!-- Mobile App -->
+  <rect x="220" y="120" width="120" height="60" fill="#8B5CF6" stroke="#6D28D9" stroke-width="2" rx="6"/>
+  <text x="280" y="150" text-anchor="middle" class="component">Mobile App</text>
+  <text x="280" y="165" text-anchor="middle" class="label">React Native</text>
+  
+  <!-- HRIS Integration -->
+  <rect x="360" y="120" width="120" height="60" fill="#F59E0B" stroke="#D97706" stroke-width="2" rx="6"/>
+  <text x="420" y="150" text-anchor="middle" class="component">HRIS Integration</text>
+  <text x="420" y="165" text-anchor="middle" class="label">BambooHR/Workday</text>
+  
+  <!-- API Gateway -->
+  <rect x="500" y="120" width="120" height="60" fill="#10B981" stroke="#059669" stroke-width="2" rx="6"/>
+  <text x="560" y="150" text-anchor="middle" class="component">API Gateway</text>
+  <text x="560" y="165" text-anchor="middle" class="label">Node.js/Express</text>
+  
+  <!-- Third-party Tools -->
+  <rect x="640" y="120" width="120" height="60" fill="#EF4444" stroke="#DC2626" stroke-width="2" rx="6"/>
+  <text x="700" y="150" text-anchor="middle" class="component">Third-party Tools</text>
+  <text x="700" y="165" text-anchor="middle" class="label">Slack/Teams</text>
+  
+  <!-- API Layer -->
+  <rect x="50" y="240" width="1100" height="200" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="2" rx="8"/>
+  <text x="600" y="265" text-anchor="middle" class="subtitle">API Services Layer</text>
+  
+  <!-- Authentication Service -->
+  <rect x="80" y="280" width="140" height="80" fill="#DC2626" stroke="#B91C1C" stroke-width="2" rx="6"/>
+  <text x="150" y="305" text-anchor="middle" class="component">Authentication</text>
+  <text x="150" y="320" text-anchor="middle" class="component">Service</text>
+  <text x="150" y="335" text-anchor="middle" class="label">JWT/OAuth2</text>
+  <text x="150" y="350" text-anchor="middle" class="label">RBAC</text>
+  
+  <!-- Employee Service -->
+  <rect x="240" y="280" width="140" height="80" fill="#7C3AED" stroke="#5B21B6" stroke-width="2" rx="6"/>
+  <text x="310" y="305" text-anchor="middle" class="component">Employee</text>
+  <text x="310" y="320" text-anchor="middle" class="component">Service</text>
+  <text x="310" y="335" text-anchor="middle" class="label">CRUD Operations</text>
+  <text x="310" y="350" text-anchor="middle" class="label">Profile Management</text>
+  
+  <!-- Assessment Service -->
+  <rect x="400" y="280" width="140" height="80" fill="#059669" stroke="#047857" stroke-width="2" rx="6"/>
+  <text x="470" y="305" text-anchor="middle" class="component">Assessment</text>
+  <text x="470" y="320" text-anchor="middle" class="component">Service</text>
+  <text x="470" y="335" text-anchor="middle" class="label">Vision Board Analysis</text>
+  <text x="470" y="350" text-anchor="middle" class="label">Game Processing</text>
+  
+  <!-- Prediction Service -->
+  <rect x="560" y="280" width="140" height="80" fill="#EA580C" stroke="#C2410C" stroke-width="2" rx="6"/>
+  <text x="630" y="305" text-anchor="middle" class="component">Prediction</text>
+  <text x="630" y="320" text-anchor="middle" class="component">Service</text>
+  <text x="630" y="335" text-anchor="middle" class="label">ML Models</text>
+  <text x="630" y="350" text-anchor="middle" class="label">AI Algorithms</text>
+  
+  <!-- Program Service -->
+  <rect x="720" y="280" width="140" height="80" fill="#0891B2" stroke="#0E7490" stroke-width="2" rx="6"/>
+  <text x="790" y="305" text-anchor="middle" class="component">Program</text>
+  <text x="790" y="320" text-anchor="middle" class="component">Service</text>
+  <text x="790" y="335" text-anchor="middle" class="label">Career Pathways</text>
+  <text x="790" y="350" text-anchor="middle" class="label">Enrollment Management</text>
+  
+  <!-- Analytics Service -->
+  <rect x="880" y="280" width="140" height="80" fill="#BE185D" stroke="#9D174D" stroke-width="2" rx="6"/>
+  <text x="950" y="305" text-anchor="middle" class="component">Analytics</text>
+  <text x="950" y="320" text-anchor="middle" class="component">Service</text>
+  <text x="950" y="335" text-anchor="middle" class="label">Reporting</text>
+  <text x="950" y="350" text-anchor="middle" class="label">KPI Tracking</text>
+  
+  <!-- Data Layer -->
+  <rect x="50" y="480" width="1100" height="200" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" rx="8"/>
+  <text x="600" y="505" text-anchor="middle" class="subtitle">Data Layer</text>
+  
+  <!-- PostgreSQL Database -->
+  <rect x="80" y="520" width="200" height="120" fill="#1E40AF" stroke="#1E3A8A" stroke-width="2" rx="6"/>
+  <text x="180" y="545" text-anchor="middle" class="component">PostgreSQL</text>
+  <text x="180" y="560" text-anchor="middle" class="component">Database</text>
+  <text x="180" y="575" text-anchor="middle" class="label">Primary Data Store</text>
+  <text x="180" y="590" text-anchor="middle" class="label">ACID Compliance</text>
+  <text x="180" y="605" text-anchor="middle" class="label">JSON Support</text>
+  <text x="180" y="620" text-anchor="middle" class="label">Multi-tenant</text>
+  
+  <!-- Redis Cache -->
+  <rect x="300" y="520" width="200" height="120" fill="#DC2626" stroke="#B91C1C" stroke-width="2" rx="6"/>
+  <text x="400" y="545" text-anchor="middle" class="component">Redis Cache</text>
+  <text x="400" y="560" text-anchor="middle" class="component">Cluster</text>
+  <text x="400" y="575" text-anchor="middle" class="label">Session Storage</text>
+  <text x="400" y="590" text-anchor="middle" class="label">Query Cache</text>
+  <text x="400" y="605" text-anchor="middle" class="label">Pub/Sub</text>
+  <text x="400" y="620" text-anchor="middle" class="label">High Performance</text>
+  
+  <!-- Data Warehouse -->
+  <rect x="520" y="520" width="200" height="120" fill="#059669" stroke="#047857" stroke-width="2" rx="6"/>
+  <text x="620" y="545" text-anchor="middle" class="component">Data Warehouse</text>
+  <text x="620" y="560" text-anchor="middle" class="component">(Analytics)</text>
+  <text x="620" y="575" text-anchor="middle" class="label">Historical Data</text>
+  <text x="620" y="590" text-anchor="middle" class="label">Business Intelligence</text>
+  <text x="620" y="605" text-anchor="middle" class="label">Reporting</text>
+  <text x="620" y="620" text-anchor="middle" class="label">Trend Analysis</text>
+  
+  <!-- ML Pipeline -->
+  <rect x="740" y="520" width="200" height="120" fill="#7C2D12" stroke="#92400E" stroke-width="2" rx="6"/>
+  <text x="840" y="545" text-anchor="middle" class="component">ML Pipeline</text>
+  <text x="840" y="560" text-anchor="middle" class="component">TensorFlow</text>
+  <text x="840" y="575" text-anchor="middle" class="label">Model Training</text>
+  <text x="840" y="590" text-anchor="middle" class="label">Prediction Engine</text>
+  <text x="840" y="605" text-anchor="middle" class="label">GPU Support</text>
+  <text x="840" y="620" text-anchor="middle" class="label">Model Registry</text>
+  
+  <!-- Background Workers -->
+  <rect x="960" y="520" width="200" height="120" fill="#6B21A8" stroke="#581C87" stroke-width="2" rx="6"/>
+  <text x="1060" y="545" text-anchor="middle" class="component">Background</text>
+  <text x="1060" y="560" text-anchor="middle" class="component">Workers</text>
+  <text x="1060" y="575" text-anchor="middle" class="label">Email Service</text>
+  <text x="1060" y="590" text-anchor="middle" class="label">Notifications</text>
+  <text x="1060" y="605" text-anchor="middle" class="label">Report Generation</text>
+  <text x="1060" y="620" text-anchor="middle" class="label">Async Processing</text>
+  
+  <!-- Arrows - Client to API Gateway -->
+  <line x1="200" y1="180" x2="500" y2="180" class="api-flow"/>
+  <line x1="340" y1="180" x2="500" y2="180" class="api-flow"/>
+  <line x1="480" y1="180" x2="500" y2="180" class="api-flow"/>
+  <line x1="700" y1="180" x2="620" y2="180" class="api-flow"/>
+  
+  <!-- Arrows - API Gateway to Services -->
+  <line x1="560" y1="200" x2="150" y2="280" class="arrow"/>
+  <line x1="560" y1="200" x2="310" y2="280" class="arrow"/>
+  <line x1="560" y1="200" x2="470" y2="280" class="arrow"/>
+  <line x1="560" y1="200" x2="630" y2="280" class="arrow"/>
+  <line x1="560" y1="200" x2="790" y2="280" class="arrow"/>
+  <line x1="560" y1="200" x2="950" y2="280" class="arrow"/>
+  
+  <!-- Arrows - Services to Data -->
+  <line x1="150" y1="360" x2="180" y2="520" class="data-flow"/>
+  <line x1="310" y1="360" x2="180" y2="520" class="data-flow"/>
+  <line x1="470" y1="360" x2="180" y2="520" class="data-flow"/>
+  <line x1="630" y1="360" x2="400" y2="520" class="data-flow"/>
+  <line x1="790" y1="360" x2="180" y2="520" class="data-flow"/>
+  <line x1="950" y1="360" x2="620" y2="520" class="data-flow"/>
+  
+  <!-- Arrows - ML Pipeline -->
+  <line x1="630" y1="360" x2="840" y2="520" class="data-flow"/>
+  <line x1="840" y1="580" x2="400" y2="580" class="data-flow"/>
+  
+  <!-- Legend -->
+  <rect x="50" y="720" width="1100" height="60" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1" rx="4"/>
+  <text x="600" y="740" text-anchor="middle" class="subtitle">Legend</text>
+  
+  <line x1="80" y1="750" x2="120" y2="750" class="api-flow"/>
+  <text x="130" y="755" class="label">API Communication</text>
+  
+  <line x1="300" y1="750" x2="340" y2="750" class="data-flow"/>
+  <text x="350" y="755" class="label">Data Flow</text>
+  
+  <line x1="500" y1="750" x2="540" y2="750" class="arrow"/>
+  <text x="550" y="755" class="label">Service Communication</text>
+  
+  <rect x="700" y="740" width="20" height="10" fill="#3B82F6"/>
+  <text x="730" y="750" class="label">Client Components</text>
+  
+  <rect x="850" y="740" width="20" height="10" fill="#10B981"/>
+  <text x="880" y="750" class="label">API Services</text>
+  
+  <rect x="1000" y="740" width="20" height="10" fill="#F59E0B"/>
+  <text x="1030" y="750" class="label">Data Storage</text>
+</svg>
